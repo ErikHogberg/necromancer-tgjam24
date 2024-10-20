@@ -1,3 +1,95 @@
-[gd_scene format=3 uid="uid://cg0lwr63age0v"]
+[gd_scene load_steps=12 format=3 uid="uid://cg0lwr63age0v"]
 
-[node name="Node3D" type="Node3D"]
+[sub_resource type="GDScript" id="GDScript_am0de"]
+script/source = "extends Node3D
+
+@export var Tile: StaticBody3D
+@export var tilingSize: Vector2 = Vector2(100,100)
+
+var tiles: Array[StaticBody3D] = []
+var currentCenterTileIndex = 5
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	tiles.resize(9)
+	tiles[0]=Tile
+	for n in 8:
+		tiles[n+1] = Tile.duplicate(DuplicateFlags.DUPLICATE_USE_INSTANTIATION)
+		add_child(tiles[n+1])
+	
+	for x in 3:
+		for y in 3:
+			var i = 3*y+x
+			tiles[i].position = Vector3(tilingSize.x * x, 0, tilingSize.y*y)
+	
+	
+func update_pos(pos: Vector3):
+	
+	pass
+"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_q4vtr"]
+size = Vector3(100, 20, 100)
+
+[sub_resource type="Gradient" id="Gradient_ji2rm"]
+colors = PackedColorArray(0.0463413, 0.164075, 0.204398, 1, 2.28621e-07, 0.351841, 0.211535, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_2uepw"]
+noise_type = 0
+fractal_type = 3
+domain_warp_enabled = true
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_5csxy"]
+color_ramp = SubResource("Gradient_ji2rm")
+noise = SubResource("FastNoiseLite_2uepw")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3pkho"]
+disable_fog = true
+albedo_texture = SubResource("NoiseTexture2D_5csxy")
+
+[sub_resource type="QuadMesh" id="QuadMesh_tn8qn"]
+material = SubResource("StandardMaterial3D_3pkho")
+size = Vector2(100, 100)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_0am33"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bpj4x"]
+sky_curve = 0.47075
+ground_bottom_color = Color(0.34375, 0.449436, 0.279994, 1)
+
+[sub_resource type="Sky" id="Sky_bwetu"]
+sky_material = SubResource("ProceduralSkyMaterial_bpj4x")
+
+[sub_resource type="Environment" id="Environment_3gvms"]
+background_mode = 2
+sky = SubResource("Sky_bwetu")
+
+[node name="World" type="Node3D"]
+
+[node name="BG" type="Node3D" parent="." node_paths=PackedStringArray("Tile")]
+script = SubResource("GDScript_am0de")
+Tile = NodePath("Tile")
+tilingSize = Vector2(101, 101)
+
+[node name="Tile" type="StaticBody3D" parent="BG"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BG/Tile"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
+shape = SubResource("BoxShape3D_q4vtr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="BG/Tile"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("QuadMesh_tn8qn")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+slide_on_ceiling = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("SphereShape3D_0am33")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.860316, -0.404093, 0.310751, -7.45058e-09, 0.6096, 0.792709, -0.509762, -0.68198, 0.524449, 213.577, 202.774, 255.573)
+environment = SubResource("Environment_3gvms")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.848697, 0.441501, -0.291189, 0.252847, 0.144871, 0.956599, 0.464524, -0.885488, 0.0113199, 1.21989, 187.753, 0)
