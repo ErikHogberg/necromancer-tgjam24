@@ -1,4 +1,6 @@
-[gd_scene load_steps=13 format=3 uid="uid://cg0lwr63age0v"]
+[gd_scene load_steps=17 format=3 uid="uid://cg0lwr63age0v"]
+
+[ext_resource type="Texture2D" uid="uid://c18busabi562l" path="res://gfx/Evil Wizard 3/Sprites/Run.png" id="1_p6elb"]
 
 [sub_resource type="GDScript" id="GDScript_am0de"]
 script/source = "extends Node3D
@@ -53,7 +55,86 @@ albedo_texture = SubResource("NoiseTexture2D_5csxy")
 material = SubResource("StandardMaterial3D_3pkho")
 size = Vector2(100, 100)
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_0am33"]
+[sub_resource type="GDScript" id="GDScript_jlvf1"]
+script/source = "extends Node3D
+
+
+const SPEED = 1.0
+const JUMP_VELOCITY = 2.0
+const GRAVITY = 9.80
+var velocity: Vector3 = Vector3.ZERO
+
+signal on_move(pos: Vector2)
+
+func is_on_floor() -> bool:
+	return global_position.y < 0.01
+
+func _process(delta: float) -> void:
+	
+	if Input.is_action_just_pressed(\"quit\"):
+		get_tree().quit()
+		return
+	
+	# Add the gravity.
+	if not is_on_floor():
+		velocity += Vector3.DOWN*(GRAVITY * delta)
+
+	# Handle jump.
+	if Input.is_action_just_pressed(\"jump\") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+
+	# Get the input direction and handle the movement/deceleration.
+	var input_dir := Input.get_vector(\"a\", \"d\", \"w\", \"s\")
+	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if direction:
+		velocity.x = direction.x * SPEED
+		velocity.z = direction.z * SPEED
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.z = move_toward(velocity.z, 0, SPEED)
+	
+	global_position += velocity;
+	if global_position.y < 0: global_position.y = 0
+	
+	on_move.emit(Vector2(global_position.x,global_position.z))
+"
+
+[sub_resource type="Animation" id="Animation_je5x1"]
+resource_name = "run"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.889),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0, 7]
+}
+
+[sub_resource type="Animation" id="Animation_t3tpp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3ukah"]
+_data = {
+"RESET": SubResource("Animation_t3tpp"),
+"run": SubResource("Animation_je5x1")
+}
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bpj4x"]
 sky_curve = 0.47075
@@ -135,20 +216,32 @@ shape = SubResource("BoxShape3D_q4vtr")
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 mesh = SubResource("QuadMesh_tn8qn")
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
-slide_on_ceiling = false
+[node name="CharacterBody3D" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = SubResource("GDScript_jlvf1")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
-shape = SubResource("SphereShape3D_0am33")
+[node name="Sprite3D" type="Sprite3D" parent="CharacterBody3D"]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 2, 0)
+cast_shadow = 0
+gi_mode = 0
+texture_filter = 0
+texture = ExtResource("1_p6elb")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterBody3D/Sprite3D"]
+libraries = {
+"": SubResource("AnimationLibrary_3ukah")
+}
+speed_scale = 9.0
 
 [node name="Cam Yaw" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 152, 164, 197)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.06615, 10.4074, 12.4275)
 
 [node name="Cam Pitch" type="Node3D" parent="Cam Yaw"]
 transform = Transform3D(1, 0, 0, 0, 0.610145, 0.79229, 0, -0.79229, 0.610145, 0, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Cam Yaw/Cam Pitch" node_paths=PackedStringArray("YawParent", "PitchParent")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 66.458)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 25.4999)
 environment = SubResource("Environment_3gvms")
 script = SubResource("GDScript_1mlub")
 YawParent = NodePath("../..")
