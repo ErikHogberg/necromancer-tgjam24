@@ -26,11 +26,41 @@ func _ready() -> void:
 		for y in 3:
 			var i = 3*y+x
 			tiles[i].position = Vector3(tilingSize.x * x, 0, tilingSize.y*y)
+	#
+#func left_tile_index():
+	#var left = currentCenterTileIndex -1
+	#if left % 3 == 0:
+		#left+=3
+#func right_tile_index():
+	#var right = currentCenterTileIndex +1
+	#if right % 3 == 0:
+		#right-=3
+#func up_tile_index():
+	#var up = currentCenterTileIndex -3
+	#if up <0 :
+		#up+=9
+#func down_tile_index():
+	#var down = currentCenterTileIndex +3
+	#if down >8:
+		#down-=9
 	
-	
-func update_pos(_pos: Vector3):
+func update_pos(pos: Vector2):
 	# todo: compare pos to center of current center tile (offset by tilingOffset), move some tiles and change center index if pos is too close to edge
-	pass
+	var currentCenterPos = tiles[currentCenterTileIndex].global_position
+	if (Vector2(currentCenterPos.x, currentCenterPos.z) + tilingOffset).distance_to(pos) > tilingDistance:
+		var shortest = 9999
+		var shortestIndex = currentCenterTileIndex
+		for index in tiles.size():
+			var tileCenterPos = tiles[index].global_position
+			var distance = (Vector2(tileCenterPos.x, tileCenterPos.z) + tilingOffset).distance_to(pos) 
+			if(shortest>distance):
+				shortest=distance
+				shortestIndex = index
+				
+		var oldIndex =currentCenterTileIndex
+		currentCenterTileIndex = shortestIndex
+		# todo: move tiles
+		#var xdiff =
 "
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_q4vtr"]
@@ -103,12 +133,12 @@ func _process(delta: float) -> void:
 		wasLeft = !wasLeft
 		on_flip.emit(wasLeft)
 	
-	var basis = transform.basis
+	var refBasis = transform.basis
 	if DirRef:
 		#direction = direction.rotated(DirRef.global_position.signed_angle_to(global_position, Vector3.DOWN))
-		basis = DirRef.global_basis
+		refBasis = DirRef.global_basis
 		
-	var direction := (basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	var direction := (refBasis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
 	if direction:
 		velocity.x = direction.x * SPEED
@@ -298,3 +328,4 @@ FollowSpeed = 99.0
 transform = Transform3D(0.848697, 0.441501, -0.291189, 0.252847, 0.144871, 0.956599, 0.464524, -0.885488, 0.0113199, 1.21989, 187.753, 0)
 
 [connection signal="on_flip" from="Player" to="Player/Sprite3D" method="set_flip_h"]
+[connection signal="on_move" from="Player" to="BG" method="update_pos"]
