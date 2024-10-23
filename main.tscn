@@ -4,6 +4,7 @@
 
 [sub_resource type="GDScript" id="GDScript_am0de"]
 script/source = "extends Node3D
+class_name Tiler
 
 @export var Tile: StaticBody3D
 @export var tilingSize: Vector2 = Vector2(100,100)
@@ -57,23 +58,36 @@ size = Vector2(100, 100)
 
 [sub_resource type="GDScript" id="GDScript_jlvf1"]
 script/source = "extends Node3D
+class_name PlayerController
 
-
-const SPEED = 1.0
+const SPEED = 0.8
 const JUMP_VELOCITY = 2.0
 const GRAVITY = 9.80
+
+@export var DirRef: Node3D
+
 var velocity: Vector3 = Vector3.ZERO
+var resetPos: Vector3
+var wasLeft = false
 
 signal on_move(pos: Vector2)
+signal on_flip(left: bool)
+
 
 func is_on_floor() -> bool:
 	return global_position.y < 0.01
+
+func _ready() -> void:
+	resetPos = global_position
 
 func _process(delta: float) -> void:
 	
 	if Input.is_action_just_pressed(\"quit\"):
 		get_tree().quit()
 		return
+		
+	if Input.is_action_just_pressed(\"reset player\"):
+		global_position = resetPos
 	
 	# Add the gravity.
 	if not is_on_floor():
@@ -85,7 +99,17 @@ func _process(delta: float) -> void:
 
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir := Input.get_vector(\"a\", \"d\", \"w\", \"s\")
-	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if abs(input_dir.x) > 0.1 && (input_dir.x < 0) != wasLeft:
+		wasLeft = !wasLeft
+		on_flip.emit(wasLeft)
+	
+	var basis = transform.basis
+	if DirRef:
+		#direction = direction.rotated(DirRef.global_position.signed_angle_to(global_position, Vector3.DOWN))
+		basis = DirRef.global_basis
+		
+	var direction := (basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	
 	if direction:
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
@@ -98,6 +122,21 @@ func _process(delta: float) -> void:
 	
 	on_move.emit(Vector2(global_position.x,global_position.z))
 "
+
+[sub_resource type="Animation" id="Animation_t3tpp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
 
 [sub_resource type="Animation" id="Animation_je5x1"]
 resource_name = "run"
@@ -113,21 +152,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [0, 7]
-}
-
-[sub_resource type="Animation" id="Animation_t3tpp"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3ukah"]
@@ -149,16 +173,20 @@ sky = SubResource("Sky_bwetu")
 
 [sub_resource type="GDScript" id="GDScript_1mlub"]
 script/source = "extends Camera3D
+class_name PlayerCam
 
 @export var YawParent: Node3D
 @export var PitchParent: Node3D
 
-@export var YawSpeed: float = 1
-@export var PitchSpeed: float = 1
+@export var YawPitchSpeed: Vector2 = Vector2(0.5,0.5)
+@export var StickYawPitchSpeed: Vector2 = Vector2(5,3)
 @export var ZoomSpeed: float = 0.1
 
 @export var PitchMinMax = Vector2(-80,80)
 @export var ZoomMinMax = Vector2(-30,100)
+
+@export var Follow: Node3D
+@export var FollowSpeed: float = 1
 
 var yaw =0
 var pitch =0
@@ -176,6 +204,11 @@ func _input(event):
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_RIGHT:
 			rightDown= event.pressed
+			if rightDown:
+				Input.mouse_mode=Input.MOUSE_MODE_CONFINED_HIDDEN
+			else:
+				Input.mouse_mode=Input.MOUSE_MODE_VISIBLE
+				
 		elif event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			zoom-=ZoomSpeed
 			zoom = maxf(zoom, ZoomMinMax.x)
@@ -184,18 +217,26 @@ func _input(event):
 			zoom = minf(zoom, ZoomMinMax.y)
 			
 	elif event is InputEventMouseMotion && rightDown:
-		yaw += event.relative.x*YawSpeed*0.01
-		pitch += event.relative.y*PitchSpeed*0.01
+		yaw += event.relative.x*YawPitchSpeed.x*0.01
+		pitch += event.relative.y*YawPitchSpeed.y*0.01
 		pitch = maxf(pitch, deg_to_rad(PitchMinMax.x))
 		pitch = minf(pitch, deg_to_rad(PitchMinMax.y))
 
 
-func _process(_delta: float) -> void:
-	if rightDown:
-		# todo: lerp towards target using curve
-		position.z = zoom
-		YawParent.rotation.y = yaw
-		PitchParent.rotation.x = pitch
+func _process(delta: float) -> void:
+	if Follow:
+		YawParent.global_position = YawParent.global_position.move_toward(Follow.global_position, FollowSpeed*delta)
+	
+	var stick := Input.get_vector(\"yaw right\", \"yaw left\", \"pitch up\", \"pitch down\")
+	yaw += stick.x * StickYawPitchSpeed.x*delta
+	if abs(stick.y) > .3:
+		pitch += stick.y * StickYawPitchSpeed.y*delta
+		pitch = minf(maxf(pitch, deg_to_rad(PitchMinMax.x)), deg_to_rad(PitchMinMax.y))
+	
+	position.z = zoom
+	# todo: lerp towards target using curve
+	YawParent.rotation.y = yaw
+	PitchParent.rotation.x = pitch
 	
 "
 
@@ -216,39 +257,44 @@ shape = SubResource("BoxShape3D_q4vtr")
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 mesh = SubResource("QuadMesh_tn8qn")
 
-[node name="CharacterBody3D" type="Node3D" parent="."]
+[node name="Player" type="Node3D" parent="." node_paths=PackedStringArray("DirRef")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = SubResource("GDScript_jlvf1")
+DirRef = NodePath("../Cam Yaw")
 
-[node name="Sprite3D" type="Sprite3D" parent="CharacterBody3D"]
+[node name="Sprite3D" type="Sprite3D" parent="Player"]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 2, 0)
 cast_shadow = 0
 gi_mode = 0
+billboard = 2
 texture_filter = 0
 texture = ExtResource("1_p6elb")
 hframes = 8
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterBody3D/Sprite3D"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Sprite3D"]
 libraries = {
 "": SubResource("AnimationLibrary_3ukah")
 }
-speed_scale = 9.0
+autoplay = "run"
+speed_scale = 6.0
 
 [node name="Cam Yaw" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.06615, 10.4074, 12.4275)
 
 [node name="Cam Pitch" type="Node3D" parent="Cam Yaw"]
-transform = Transform3D(1, 0, 0, 0, 0.610145, 0.79229, 0, -0.79229, 0.610145, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.610145, 0.79229, 0, -0.79229, 0.610145, 0, 8.33149, 0)
 
-[node name="Camera3D" type="Camera3D" parent="Cam Yaw/Cam Pitch" node_paths=PackedStringArray("YawParent", "PitchParent")]
+[node name="Camera3D" type="Camera3D" parent="Cam Yaw/Cam Pitch" node_paths=PackedStringArray("YawParent", "PitchParent", "Follow")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 25.4999)
 environment = SubResource("Environment_3gvms")
 script = SubResource("GDScript_1mlub")
 YawParent = NodePath("../..")
 PitchParent = NodePath("..")
-YawSpeed = 0.5
-PitchSpeed = 0.5
 ZoomSpeed = 9.0
+Follow = NodePath("../../../Player")
+FollowSpeed = 99.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.848697, 0.441501, -0.291189, 0.252847, 0.144871, 0.956599, 0.464524, -0.885488, 0.0113199, 1.21989, 187.753, 0)
+
+[connection signal="on_flip" from="Player" to="Player/Sprite3D" method="set_flip_h"]
