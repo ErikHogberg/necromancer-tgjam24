@@ -26,6 +26,7 @@ func _ready() -> void:
 		for y in 3:
 			var i = 3*y+x
 			tiles[i].position = Vector3(tilingSize.x * x, 0, tilingSize.y*y)
+			tiles[i].get_child(2).text = str(i)
 	#
 #func left_tile_index():
 	#var left = currentCenterTileIndex -1
@@ -44,23 +45,54 @@ func _ready() -> void:
 	#if down >8:
 		#down-=9
 	
-func update_pos(pos: Vector2):
-	# todo: compare pos to center of current center tile (offset by tilingOffset), move some tiles and change center index if pos is too close to edge
-	var currentCenterPos = tiles[currentCenterTileIndex].global_position
-	if (Vector2(currentCenterPos.x, currentCenterPos.z) + tilingOffset).distance_to(pos) > tilingDistance:
-		var shortest = 9999
-		var shortestIndex = currentCenterTileIndex
-		for index in tiles.size():
-			var tileCenterPos = tiles[index].global_position
-			var distance = (Vector2(tileCenterPos.x, tileCenterPos.z) + tilingOffset).distance_to(pos) 
-			if(shortest>distance):
-				shortest=distance
-				shortestIndex = index
+func flatPos(pos: Vector3) -> Vector2:
+	return Vector2(pos.x, pos.z)
+	
+var lastDir: Vector2
+var left = false
+var right = false
+var up = false
+var down = false
+
+func shouldTile(tilePos: Vector3, refPos: Vector2)-> bool:
+	lastDir = flatPos(tilePos) - refPos
+	
+	up = false
+	down = false
+	right= false
+	left = false
+	
+	if lastDir.x < -tilingDistance:
+		left = true
+		return true
+	if lastDir.x > tilingDistance:
+		right= true
+		return true
+	if lastDir.y < -tilingDistance:
+		up = true
+		return true
+	if lastDir.y > tilingDistance:
+		down = true
+		return true
 				
-		var oldIndex =currentCenterTileIndex
-		currentCenterTileIndex = shortestIndex
-		# todo: move tiles
-		#var xdiff =
+	return false
+	
+func update_pos(pos: Vector2):
+	var refPos = pos + tilingOffset
+	for x in 3:
+		for y in 3:
+			var i = y*3+x
+			var tile = tiles[i]
+			if shouldTile(tile.global_position, refPos):
+				if left:
+					tile.global_position.x += tilingSize.x *3
+				elif right:
+					tile.global_position.x -= tilingSize.x*3
+				if up:
+					tile.global_position.z += tilingSize.y*3
+				elif down:
+					tile.global_position.z -= tilingSize.y*3
+				
 "
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_q4vtr"]
@@ -286,6 +318,12 @@ shape = SubResource("BoxShape3D_q4vtr")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="BG/Tile"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 mesh = SubResource("QuadMesh_tn8qn")
+
+[node name="Label3D" type="Label3D" parent="BG/Tile"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.96046, 0)
+billboard = 1
+text = "1"
+font_size = 320
 
 [node name="Player" type="Node3D" parent="." node_paths=PackedStringArray("DirRef")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
