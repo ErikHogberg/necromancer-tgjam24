@@ -1,6 +1,7 @@
-[gd_scene load_steps=17 format=3 uid="uid://cg0lwr63age0v"]
+[gd_scene load_steps=21 format=3 uid="uid://cg0lwr63age0v"]
 
 [ext_resource type="Texture2D" uid="uid://c18busabi562l" path="res://gfx/Evil Wizard 3/Sprites/Run.png" id="1_p6elb"]
+[ext_resource type="Texture2D" uid="uid://b3emqeoocexpj" path="res://gfx/Wizard Pack/Run.png" id="2_4r43l"]
 
 [sub_resource type="GDScript" id="GDScript_am0de"]
 script/source = "extends Node3D
@@ -302,6 +303,43 @@ func _process(delta: float) -> void:
 	
 "
 
+[sub_resource type="Animation" id="Animation_8g5ho"]
+resource_name = "run"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.93),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0, 7]
+}
+
+[sub_resource type="Animation" id="Animation_rqm6h"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mllyv"]
+_data = {
+"RESET": SubResource("Animation_rqm6h"),
+"run": SubResource("Animation_8g5ho")
+}
+
 [node name="World" type="Node3D"]
 
 [node name="BG" type="Node3D" parent="." node_paths=PackedStringArray("Tile")]
@@ -364,6 +402,20 @@ FollowSpeed = 99.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.848697, 0.441501, -0.291189, 0.252847, 0.144871, 0.956599, 0.464524, -0.885488, 0.0113199, 1.21989, 187.753, 0)
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 14, 2.98386, 0)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("2_4r43l")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite3D"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 6.0
 
 [connection signal="on_flip" from="Player" to="Player/Sprite3D" method="set_flip_h"]
 [connection signal="on_move" from="Player" to="BG" method="update_pos"]
