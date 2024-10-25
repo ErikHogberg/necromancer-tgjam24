@@ -1,7 +1,14 @@
-[gd_scene load_steps=21 format=3 uid="uid://cg0lwr63age0v"]
+[gd_scene load_steps=28 format=3 uid="uid://cg0lwr63age0v"]
 
 [ext_resource type="Texture2D" uid="uid://c18busabi562l" path="res://gfx/Evil Wizard 3/Sprites/Run.png" id="1_p6elb"]
 [ext_resource type="Texture2D" uid="uid://b3emqeoocexpj" path="res://gfx/Wizard Pack/Run.png" id="2_4r43l"]
+[ext_resource type="Texture2D" uid="uid://b7yoid2efejrk" path="res://gfx/EVil Wizard 2/Sprites/Run.png" id="3_5qtcp"]
+[ext_resource type="Texture2D" uid="uid://dvsscef8tiv13" path="res://gfx/Evil Wizard/Sprites/Move.png" id="4_dwnav"]
+[ext_resource type="Texture2D" uid="uid://iqtijin7wi10" path="res://gfx/Hero Knight 2/Sprites/Run.png" id="4_sduu6"]
+[ext_resource type="Texture2D" uid="uid://vbeelnux8ub3" path="res://gfx/Medieval King Pack 2/Sprites/Run.png" id="5_rbnxw"]
+[ext_resource type="Texture2D" uid="uid://ccckh33e3yabh" path="res://gfx/Medieval Warrior Pack 2/Sprites/Run.png" id="6_baog2"]
+[ext_resource type="Texture2D" uid="uid://bm4exy50t4o7q" path="res://gfx/Martial Hero 2/Sprites/Run.png" id="7_et2ld"]
+[ext_resource type="Texture2D" uid="uid://csyp2suf4wl5o" path="res://gfx/Martial Hero/Sprites/Run.png" id="8_1vmux"]
 
 [sub_resource type="GDScript" id="GDScript_am0de"]
 script/source = "extends Node3D
@@ -303,6 +310,21 @@ func _process(delta: float) -> void:
 	
 "
 
+[sub_resource type="Animation" id="Animation_rqm6h"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
 [sub_resource type="Animation" id="Animation_8g5ho"]
 resource_name = "run"
 loop_mode = 1
@@ -317,21 +339,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [0, 7]
-}
-
-[sub_resource type="Animation" id="Animation_rqm6h"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_mllyv"]
@@ -396,26 +403,126 @@ environment = SubResource("Environment_3gvms")
 script = SubResource("GDScript_1mlub")
 YawParent = NodePath("../..")
 PitchParent = NodePath("..")
-ZoomSpeed = 9.0
+ZoomSpeed = 1.0
 Follow = NodePath("../../../Player")
 FollowSpeed = 99.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.848697, 0.441501, -0.291189, 0.252847, 0.144871, 0.956599, 0.464524, -0.885488, 0.0113199, 1.21989, 187.753, 0)
 
-[node name="Sprite3D" type="Sprite3D" parent="."]
+[node name="Characters" type="Node3D" parent="."]
+
+[node name="Wizard" type="Sprite3D" parent="Characters"]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 14, 2.98386, 0)
 billboard = 2
 texture_filter = 0
 texture = ExtResource("2_4r43l")
 hframes = 8
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite3D"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Wizard"]
 libraries = {
 "": SubResource("AnimationLibrary_mllyv")
 }
 autoplay = "run"
 speed_scale = 6.0
+
+[node name="Evil Wizard" type="Sprite3D" parent="Characters"]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 21.805, 2.98386, 0)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("3_5qtcp")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Evil Wizard"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 6.0
+
+[node name="Evil Wizard2" type="Sprite3D" parent="Characters"]
+transform = Transform3D(6, 0, 0, 0, 6, 0, 0, 0, 6, 17.3946, 2.10592, 3.82197)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("4_dwnav")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Evil Wizard2"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 6.0
+
+[node name="Sprite3D3" type="Sprite3D" parent="Characters"]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 27.4198, 1.59398, 0)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("4_sduu6")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Sprite3D3"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 3.0
+
+[node name="Sprite3D4" type="Sprite3D" parent="Characters"]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 34.3918, 4.59625, -0.0107918)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("5_rbnxw")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Sprite3D4"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 3.0
+
+[node name="Sprite3D5" type="Sprite3D" parent="Characters"]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 29.495, 2.83874, 5.57287)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("6_baog2")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Sprite3D5"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 3.0
+
+[node name="Sprite3D6" type="Sprite3D" parent="Characters"]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 8.38396, 2.83874, 17.262)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("7_et2ld")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Sprite3D6"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 3.0
+
+[node name="Sprite3D7" type="Sprite3D" parent="Characters"]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 16.0673, 2.5076, 17.262)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("8_1vmux")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Sprite3D7"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 3.0
 
 [connection signal="on_flip" from="Player" to="Player/Sprite3D" method="set_flip_h"]
 [connection signal="on_move" from="Player" to="BG" method="update_pos"]
