@@ -130,10 +130,10 @@ size = Vector2(100, 100)
 script/source = "extends Node3D
 class_name PlayerController
 
-const SPEED = 0.8
-const JUMP_VELOCITY = 2.0
-const GRAVITY = 9.80
+const JUMP_VELOCITY = 1
+const GRAVITY = 0.980*5
 
+@export var MoveSpeed: float = 60
 @export var DirRef: Node3D
 
 var velocity: Vector3 = Vector3.ZERO
@@ -161,7 +161,9 @@ func _process(delta: float) -> void:
 	
 	# Add the gravity.
 	if not is_on_floor():
-		velocity += Vector3.DOWN*(GRAVITY * delta)
+		velocity.y += -GRAVITY * delta
+	else:
+		global_position.y = 0
 
 	# Handle jump.
 	if Input.is_action_just_pressed(\"jump\") and is_on_floor():
@@ -180,12 +182,13 @@ func _process(delta: float) -> void:
 		
 	var direction := (refBasis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
-	if direction:
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
+	if is_on_floor():
+		if direction:
+			velocity.x = direction.x * MoveSpeed * delta
+			velocity.z = direction.z * MoveSpeed * delta
+		else:
+			velocity.x = move_toward(velocity.x, 0, MoveSpeed)
+			velocity.z = move_toward(velocity.z, 0, MoveSpeed)
 	
 	global_position += velocity;
 	if global_position.y < 0: global_position.y = 0
@@ -287,8 +290,8 @@ func _input(event):
 			zoom = minf(zoom, ZoomMinMax.y)
 			
 	elif event is InputEventMouseMotion && rightDown:
-		yaw += event.relative.x*YawPitchSpeed.x*0.01
-		pitch += event.relative.y*YawPitchSpeed.y*0.01
+		yaw -= event.relative.x*YawPitchSpeed.x*0.01
+		pitch -= event.relative.y*YawPitchSpeed.y*0.01
 		pitch = maxf(pitch, deg_to_rad(PitchMinMax.x))
 		pitch = minf(pitch, deg_to_rad(PitchMinMax.y))
 
@@ -352,9 +355,11 @@ _data = {
 [node name="BG" type="Node3D" parent="." node_paths=PackedStringArray("Tile")]
 script = SubResource("GDScript_am0de")
 Tile = NodePath("Tile")
-tilingSize = Vector2(101, 101)
+tilingSize = Vector2(500, 500)
+tilingDistance = 600.0
 
 [node name="Tile" type="StaticBody3D" parent="BG"]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BG/Tile"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
