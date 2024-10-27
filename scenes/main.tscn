@@ -1,16 +1,16 @@
 [gd_scene load_steps=31 format=3 uid="uid://cg0lwr63age0v"]
 
-[ext_resource type="Texture2D" uid="uid://c18busabi562l" path="res://gfx/Evil Wizard 3/Sprites/Run.png" id="1_p6elb"]
-[ext_resource type="Texture2D" uid="uid://b3emqeoocexpj" path="res://gfx/Wizard Pack/Run.png" id="2_4r43l"]
-[ext_resource type="Texture2D" uid="uid://ba4xa50tcwpc5" path="res://gfx/Monsters_Creatures_Fantasy/Skeleton/Walk.png" id="2_77dby"]
-[ext_resource type="Texture2D" uid="uid://b7yoid2efejrk" path="res://gfx/EVil Wizard 2/Sprites/Run.png" id="3_5qtcp"]
-[ext_resource type="Script" path="res://zombie.gd" id="3_6p52d"]
-[ext_resource type="Texture2D" uid="uid://dvsscef8tiv13" path="res://gfx/Evil Wizard/Sprites/Move.png" id="4_dwnav"]
-[ext_resource type="Texture2D" uid="uid://iqtijin7wi10" path="res://gfx/Hero Knight 2/Sprites/Run.png" id="4_sduu6"]
-[ext_resource type="Texture2D" uid="uid://vbeelnux8ub3" path="res://gfx/Medieval King Pack 2/Sprites/Run.png" id="5_rbnxw"]
-[ext_resource type="Texture2D" uid="uid://ccckh33e3yabh" path="res://gfx/Medieval Warrior Pack 2/Sprites/Run.png" id="6_baog2"]
-[ext_resource type="Texture2D" uid="uid://bm4exy50t4o7q" path="res://gfx/Martial Hero 2/Sprites/Run.png" id="7_et2ld"]
-[ext_resource type="Texture2D" uid="uid://csyp2suf4wl5o" path="res://gfx/Martial Hero/Sprites/Run.png" id="8_1vmux"]
+[ext_resource type="Texture2D" uid="uid://c18busabi562l" path="res://gfx/Evil Wizard 3/Sprites/Run.png" id="1_nbkfe"]
+[ext_resource type="Texture2D" uid="uid://ba4xa50tcwpc5" path="res://gfx/Monsters_Creatures_Fantasy/Skeleton/Walk.png" id="2_70no2"]
+[ext_resource type="Script" path="res://zombie.gd" id="3_ujfd4"]
+[ext_resource type="Texture2D" uid="uid://b3emqeoocexpj" path="res://gfx/Wizard Pack/Run.png" id="4_mjgtt"]
+[ext_resource type="Texture2D" uid="uid://b7yoid2efejrk" path="res://gfx/EVil Wizard 2/Sprites/Run.png" id="5_kddxm"]
+[ext_resource type="Texture2D" uid="uid://dvsscef8tiv13" path="res://gfx/Evil Wizard/Sprites/Move.png" id="6_3bjep"]
+[ext_resource type="Texture2D" uid="uid://iqtijin7wi10" path="res://gfx/Hero Knight 2/Sprites/Run.png" id="7_f1ved"]
+[ext_resource type="Texture2D" uid="uid://vbeelnux8ub3" path="res://gfx/Medieval King Pack 2/Sprites/Run.png" id="8_leh5c"]
+[ext_resource type="Texture2D" uid="uid://ccckh33e3yabh" path="res://gfx/Medieval Warrior Pack 2/Sprites/Run.png" id="9_rml13"]
+[ext_resource type="Texture2D" uid="uid://bm4exy50t4o7q" path="res://gfx/Martial Hero 2/Sprites/Run.png" id="10_jps67"]
+[ext_resource type="Texture2D" uid="uid://csyp2suf4wl5o" path="res://gfx/Martial Hero/Sprites/Run.png" id="11_3317n"]
 
 [sub_resource type="GDScript" id="GDScript_am0de"]
 script/source = "extends Node3D
@@ -37,23 +37,7 @@ func _ready() -> void:
 			var i = 3*y+x
 			tiles[i].position = Vector3(tilingSize.x * x, 0, tilingSize.y*y)
 			tiles[i].get_child(2).text = str(i)
-	#
-#func left_tile_index():
-	#var left = currentCenterTileIndex -1
-	#if left % 3 == 0:
-		#left+=3
-#func right_tile_index():
-	#var right = currentCenterTileIndex +1
-	#if right % 3 == 0:
-		#right-=3
-#func up_tile_index():
-	#var up = currentCenterTileIndex -3
-	#if up <0 :
-		#up+=9
-#func down_tile_index():
-	#var down = currentCenterTileIndex +3
-	#if down >8:
-		#down-=9
+
 	
 func flatPos(pos: Vector3) -> Vector2:
 	return Vector2(pos.x, pos.z)
@@ -150,6 +134,7 @@ func is_on_floor() -> bool:
 	return global_position.y < 0.01
 
 func _ready() -> void:
+	Global.hostiles.push_back(self)
 	resetPos = global_position
 
 func _process(delta: float) -> void:
@@ -405,7 +390,7 @@ cast_shadow = 0
 gi_mode = 0
 billboard = 2
 texture_filter = 0
-texture = ExtResource("1_p6elb")
+texture = ExtResource("1_nbkfe")
 hframes = 8
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Sprite3D"]
@@ -440,9 +425,9 @@ transform = Transform3D(0.848697, 0.441501, -0.291189, 0.252847, 0.144871, 0.956
 transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -18.9327, 2.5076, -7.738)
 billboard = 2
 texture_filter = 0
-texture = ExtResource("2_77dby")
+texture = ExtResource("2_70no2")
 hframes = 4
-script = ExtResource("3_6p52d")
+script = ExtResource("3_ujfd4")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Enemies/Sprite3D8"]
 libraries = {
@@ -457,7 +442,7 @@ speed_scale = 3.0
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 14, 2.98386, 0)
 billboard = 2
 texture_filter = 0
-texture = ExtResource("2_4r43l")
+texture = ExtResource("4_mjgtt")
 hframes = 8
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Wizard"]
@@ -471,7 +456,7 @@ speed_scale = 6.0
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 21.805, 2.98386, 0)
 billboard = 2
 texture_filter = 0
-texture = ExtResource("3_5qtcp")
+texture = ExtResource("5_kddxm")
 hframes = 8
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Evil Wizard"]
@@ -485,7 +470,7 @@ speed_scale = 6.0
 transform = Transform3D(6, 0, 0, 0, 6, 0, 0, 0, 6, 17.3946, 2.10592, 3.82197)
 billboard = 2
 texture_filter = 0
-texture = ExtResource("4_dwnav")
+texture = ExtResource("6_3bjep")
 hframes = 8
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Evil Wizard2"]
@@ -499,7 +484,7 @@ speed_scale = 6.0
 transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 27.4198, 1.59398, 0)
 billboard = 2
 texture_filter = 0
-texture = ExtResource("4_sduu6")
+texture = ExtResource("7_f1ved")
 hframes = 8
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Sprite3D3"]
@@ -513,7 +498,7 @@ speed_scale = 3.0
 transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 34.3918, 4.59625, -0.0107918)
 billboard = 2
 texture_filter = 0
-texture = ExtResource("5_rbnxw")
+texture = ExtResource("8_leh5c")
 hframes = 8
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Sprite3D4"]
@@ -527,7 +512,7 @@ speed_scale = 3.0
 transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 29.495, 2.83874, 5.57287)
 billboard = 2
 texture_filter = 0
-texture = ExtResource("6_baog2")
+texture = ExtResource("9_rml13")
 hframes = 8
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Sprite3D5"]
@@ -541,7 +526,7 @@ speed_scale = 3.0
 transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 8.38396, 2.83874, 17.262)
 billboard = 2
 texture_filter = 0
-texture = ExtResource("7_et2ld")
+texture = ExtResource("10_jps67")
 hframes = 8
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Sprite3D6"]
@@ -555,7 +540,7 @@ speed_scale = 3.0
 transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 16.0673, 2.5076, 17.262)
 billboard = 2
 texture_filter = 0
-texture = ExtResource("8_1vmux")
+texture = ExtResource("11_3317n")
 hframes = 8
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Sprite3D7"]

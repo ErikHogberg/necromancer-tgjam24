@@ -14,6 +14,9 @@ var nextState = State.Idle
 var attackTimer = -1.0
 var thinkingTimer = -1.0
 
+func _ready() -> void:
+	Global.hostiles.push_back(self)
+
 func attack():
 	if !target:
 		enter_state(State.Idle)
