@@ -3,6 +3,7 @@ extends Node
 
 var current_scene = null
 
+var player: Node3D
 var friendlies: Array[Node3D] = []
 var hostiles: Array[Node3D] = []
 
@@ -29,3 +30,21 @@ func get_closest_friendly(pos: Vector3) -> Node3D:
 			closest = friendly
 			closestDistanceSqr = distance
 	return closest
+
+func add_friendly(friend: Node3D):
+	friendlies.push_back(friend)
+
+func add_hostile(hostile: Node3D):
+	hostiles.push_back(hostile)
+
+func remove_friendly(friend: Node3D):
+	for i in friendlies.size():
+		if friendlies[i] == friend:
+			friendlies.remove_at(i)
+			return
+
+func remove_hostile(hostile: Node3D):
+	for i in hostiles.size():
+		if hostiles[i] == hostile:
+			hostiles.remove_at(i)
+			return
