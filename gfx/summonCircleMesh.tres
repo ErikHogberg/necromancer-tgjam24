@@ -1,0 +1,128 @@
+[gd_resource type="QuadMesh" load_steps=11 format=3 uid="uid://c72qv7tsxflig"]
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_3mid5"]
+operator = 2
+
+[sub_resource type="VisualShaderNodeVectorLen" id="VisualShaderNodeVectorLen_atn28"]
+output_port_for_preview = 0
+default_input_values = [0, Vector2(0, 0)]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_wnmgx"]
+output_port_for_preview = 0
+expanded_output_ports = [0]
+input_name = "uv"
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_20iq7"]
+output_port_for_preview = 0
+default_input_values = [0, Vector2(0, 0), 1, Vector2(-0.5, -0.5)]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_1j3yr"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0.5, 0.5)]
+op_type = 0
+operator = 2
+
+[sub_resource type="VisualShaderNodeFloatConstant" id="VisualShaderNodeFloatConstant_ofswm"]
+constant = 0.4
+
+[sub_resource type="VisualShaderNodeColorParameter" id="VisualShaderNodeColorParameter_4guxr"]
+expanded_output_ports = [0]
+parameter_name = "ColorParameter"
+default_value_enabled = true
+
+[sub_resource type="VisualShaderNodeRemap" id="VisualShaderNodeRemap_sgr2a"]
+output_port_for_preview = 0
+default_input_values = [1, 0.2, 2, 0.1, 3, 0.0, 4, 1.0]
+
+[sub_resource type="VisualShader" id="VisualShader_f1kdf"]
+code = "shader_type spatial;
+render_mode blend_add, depth_draw_never, cull_back, diffuse_toon, specular_toon, alpha_to_coverage;
+
+uniform vec4 ColorParameter : source_color = vec4(1.000000, 1.000000, 1.000000, 1.000000);
+
+
+
+void fragment() {
+// ColorParameter:8
+	vec4 n_out8p0 = ColorParameter;
+	float n_out8p4 = n_out8p0.a;
+
+
+// Input:3
+	vec2 n_out3p0 = UV;
+
+
+// VectorOp:4
+	vec2 n_in4p1 = vec2(-0.50000, -0.50000);
+	vec2 n_out4p0 = n_out3p0 + n_in4p1;
+
+
+// FloatConstant:7
+	float n_out7p0 = 0.400000;
+
+
+// VectorOp:6
+	vec2 n_out6p0 = n_out4p0 * vec2(n_out7p0);
+
+
+// VectorLen:2
+	float n_out2p0 = length(n_out6p0);
+
+
+	float n_out9p0;
+// Remap:9
+	float n_in9p1 = 0.20000;
+	float n_in9p2 = 0.10000;
+	float n_in9p3 = 0.00000;
+	float n_in9p4 = 1.00000;
+	{
+		float __input_range = n_in9p2 - n_in9p1;
+		float __output_range = n_in9p4 - n_in9p3;
+		n_out9p0 = n_in9p3 + __output_range * ((n_out2p0 - n_in9p1) / __input_range);
+	}
+
+
+// FloatOp:10
+	float n_out10p0 = n_out9p0 * n_out8p4;
+
+
+// Output:0
+	ALBEDO = vec3(n_out8p0.xyz);
+	ALPHA = n_out10p0;
+
+
+}
+"
+graph_offset = Vector2(-391.739, -44.612)
+modes/blend = 1
+modes/depth_draw = 2
+modes/diffuse = 3
+modes/specular = 1
+flags/alpha_to_coverage = true
+nodes/fragment/0/position = Vector2(1120, 440)
+nodes/fragment/2/node = SubResource("VisualShaderNodeVectorLen_atn28")
+nodes/fragment/2/position = Vector2(120, 60)
+nodes/fragment/3/node = SubResource("VisualShaderNodeInput_wnmgx")
+nodes/fragment/3/position = Vector2(-780, 100)
+nodes/fragment/4/node = SubResource("VisualShaderNodeVectorOp_20iq7")
+nodes/fragment/4/position = Vector2(-400, 40)
+nodes/fragment/6/node = SubResource("VisualShaderNodeVectorOp_1j3yr")
+nodes/fragment/6/position = Vector2(-140, 40)
+nodes/fragment/7/node = SubResource("VisualShaderNodeFloatConstant_ofswm")
+nodes/fragment/7/position = Vector2(-780, 500)
+nodes/fragment/8/node = SubResource("VisualShaderNodeColorParameter_4guxr")
+nodes/fragment/8/position = Vector2(-780, 680)
+nodes/fragment/9/node = SubResource("VisualShaderNodeRemap_sgr2a")
+nodes/fragment/9/position = Vector2(380, 100)
+nodes/fragment/10/node = SubResource("VisualShaderNodeFloatOp_3mid5")
+nodes/fragment/10/position = Vector2(832, 342.5)
+nodes/fragment/connections = PackedInt32Array(3, 0, 4, 0, 4, 0, 6, 0, 7, 0, 6, 1, 6, 0, 2, 0, 8, 0, 0, 0, 2, 0, 9, 0, 9, 0, 10, 0, 10, 0, 0, 1, 8, 4, 10, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_brnka"]
+render_priority = 0
+shader = SubResource("VisualShader_f1kdf")
+shader_parameter/ColorParameter = Color(0.737255, 0.698039, 1, 0.396078)
+
+[resource]
+material = SubResource("ShaderMaterial_brnka")

@@ -1,8 +1,9 @@
-[gd_scene load_steps=31 format=3 uid="uid://cg0lwr63age0v"]
+[gd_scene load_steps=32 format=3 uid="uid://cg0lwr63age0v"]
 
+[ext_resource type="QuadMesh" uid="uid://c72qv7tsxflig" path="res://gfx/summonCircleMesh.tres" id="1_7tuv2"]
 [ext_resource type="Texture2D" uid="uid://c18busabi562l" path="res://gfx/Evil Wizard 3/Sprites/Run.png" id="1_nbkfe"]
-[ext_resource type="Texture2D" uid="uid://ba4xa50tcwpc5" path="res://gfx/Monsters_Creatures_Fantasy/Skeleton/Walk.png" id="2_70no2"]
-[ext_resource type="Script" path="res://scripts/zombie.gd" id="3_ujfd4"]
+[ext_resource type="Script" path="res://scripts/summonNode.gd" id="2_jlwc0"]
+[ext_resource type="PackedScene" uid="uid://cjv1ybdpcwsqh" path="res://prefabs/zombie.tscn" id="4_1pmvf"]
 [ext_resource type="Texture2D" uid="uid://b3emqeoocexpj" path="res://gfx/Wizard Pack/Run.png" id="4_mjgtt"]
 [ext_resource type="Texture2D" uid="uid://b7yoid2efejrk" path="res://gfx/EVil Wizard 2/Sprites/Run.png" id="5_kddxm"]
 [ext_resource type="Texture2D" uid="uid://dvsscef8tiv13" path="res://gfx/Evil Wizard/Sprites/Move.png" id="6_3bjep"]
@@ -122,13 +123,15 @@ const GRAVITY = 0.980*5
 @export var MoveSpeed: float = 60
 @export var DirRef: Node3D
 
+
 var velocity: Vector3 = Vector3.ZERO
 var resetPos: Vector3
 var wasLeft = false
 
 signal on_move(pos: Vector2)
 signal on_flip(left: bool)
-
+signal show_summon_circle(on: bool)
+signal summon
 
 func is_on_floor() -> bool:
 	return global_position.y < 0.01
@@ -144,14 +147,28 @@ func die():
 func revive():
 	Global.add_friendly(self)
 
-func _process(delta: float) -> void:
+func shoot():
+	# project mouse pos on plane? select closest enemy in range and send homing projectile?
+	pass
+
+func _input(event: InputEvent) -> void:
 	
-	if Input.is_action_just_pressed(\"quit\"):
+	if event is InputEventMouseButton:
+		match event.button_index:
+			MOUSE_BUTTON_RIGHT:
+				show_summon_circle.emit(event.pressed)
+				if !event.pressed:
+					summon.emit()
+			MOUSE_BUTTON_LEFT:
+				if event.pressed:
+					shoot()
+	if event.is_action_pressed(\"quit\"):
 		get_tree().quit()
-		return
-		
-	if Input.is_action_just_pressed(\"reset player\"):
+	if event.is_action_pressed(\"reset player\"):
 		global_position = resetPos
+	
+
+func _process(delta: float) -> void:
 	
 	# Add the gravity.
 	if not is_on_floor():
@@ -391,6 +408,39 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = SubResource("GDScript_jlvf1")
 DirRef = NodePath("../Cam Yaw")
 
+[node name="zombie spawns" type="Node3D" parent="Player"]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0.286009, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player/zombie spawns"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -1.20845, 0, -0.0684231)
+mesh = ExtResource("1_7tuv2")
+script = ExtResource("2_jlwc0")
+zombie_prefab = ExtResource("4_1pmvf")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Player/zombie spawns"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.500936, 0, 1.09076)
+mesh = ExtResource("1_7tuv2")
+script = ExtResource("2_jlwc0")
+zombie_prefab = ExtResource("4_1pmvf")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Player/zombie spawns"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.788902, 0, 0.857534)
+mesh = ExtResource("1_7tuv2")
+script = ExtResource("2_jlwc0")
+zombie_prefab = ExtResource("4_1pmvf")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Player/zombie spawns"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 1.11729, 1.93715e-07, -0.490531)
+mesh = ExtResource("1_7tuv2")
+script = ExtResource("2_jlwc0")
+zombie_prefab = ExtResource("4_1pmvf")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Player/zombie spawns"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.158705, 3.7998e-07, -1.18584)
+mesh = ExtResource("1_7tuv2")
+script = ExtResource("2_jlwc0")
+zombie_prefab = ExtResource("4_1pmvf")
+
 [node name="Sprite3D" type="Sprite3D" parent="Player"]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 2.85773, 0)
 cast_shadow = 0
@@ -428,25 +478,8 @@ transform = Transform3D(0.848697, 0.441501, -0.291189, 0.252847, 0.144871, 0.956
 
 [node name="Enemies" type="Node3D" parent="."]
 
-[node name="Node3D" type="Node3D" parent="Enemies"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, -6)
-script = ExtResource("3_ujfd4")
-SightDistance = 33.0
-FollowDistance = 9.0
-
-[node name="Sprite3D8" type="Sprite3D" parent="Enemies/Node3D"]
-transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 2.508, 0)
-billboard = 2
-texture_filter = 0
-texture = ExtResource("2_70no2")
-hframes = 4
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Enemies/Node3D/Sprite3D8"]
-libraries = {
-"": SubResource("AnimationLibrary_mllyv")
-}
-autoplay = "run4"
-speed_scale = 3.0
+[node name="Zombie" parent="Enemies" instance=ExtResource("4_1pmvf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.3078, 0, -13.2464)
 
 [node name="Characters" type="Node3D" parent="."]
 
@@ -564,3 +597,9 @@ speed_scale = 3.0
 
 [connection signal="on_flip" from="Player" to="Player/Sprite3D" method="set_flip_h"]
 [connection signal="on_move" from="Player" to="BG" method="update_pos"]
+[connection signal="show_summon_circle" from="Player" to="Player/zombie spawns" method="set_visible"]
+[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D" method="summon"]
+[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D2" method="summon"]
+[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D3" method="summon"]
+[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D4" method="summon"]
+[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D5" method="summon"]

@@ -11,6 +11,9 @@ enum State { Idle, Follow, Attacking, Chasing, Thinking}
 
 const FOLLOW_SPEED = 10.0
 
+const followMinMax = Vector2(1,1000)
+const speedMinMax = Vector2(0.1,100)
+
 @export var currentState = State.Idle
 var target: Node3D
 var nextState = State.Idle
@@ -49,9 +52,16 @@ func follow(delta: float):
 	if !target:
 		enter_state(State.Idle)
 		return
-	if target.global_position.distance_squared_to(global_position) > FollowDistance*FollowDistance:
-		global_position = global_position.move_toward(target.global_position, delta*FOLLOW_SPEED)
+		
+	# TODO: separation to other zombies/friendlies. boids?
+		
+	var dist = target.global_position.distance_to(global_position)
+	if dist > FollowDistance:
+		var distLerp = (dist - followMinMax.x) / (followMinMax.y-followMinMax.x)
+		var speed = distLerp* (speedMinMax.y-speedMinMax.x) + speedMinMax.x
+		global_position = global_position.move_toward(target.global_position, delta*speed*FOLLOW_SPEED)
 		global_position.y = 0
+		
 
 func enter_state(new_state: State):
 	print("enter state ", State.keys()[new_state])
