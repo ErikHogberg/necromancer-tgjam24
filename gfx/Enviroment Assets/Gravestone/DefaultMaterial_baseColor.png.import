@@ -2,20 +2,17 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bd8tlbrvl2n5d"
-path.s3tc="res://.godot/imported/PBR - Metallic Roughness Alpha-blend_3.png-f54e2858770f117117bf29d07def5eef.s3tc.ctex"
+uid="uid://cis2rpc6ebgx0"
+path.s3tc="res://.godot/imported/DefaultMaterial_baseColor.png-7cd00f55b5e57643e31326b1b43569c3.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
-generator_parameters={
-"md5": "d1dd210d6b1312cb342b56d02bd5e651"
-}
 
 [deps]
 
-source_file="res://gfx/Enviroment Assets/PBR - Metallic Roughness Alpha-blend_3.png"
-dest_files=["res://.godot/imported/PBR - Metallic Roughness Alpha-blend_3.png-f54e2858770f117117bf29d07def5eef.s3tc.ctex"]
+source_file="res://gfx/Enviroment Assets/Gravestone/DefaultMaterial_baseColor.png"
+dest_files=["res://.godot/imported/DefaultMaterial_baseColor.png-7cd00f55b5e57643e31326b1b43569c3.s3tc.ctex"]
 
 [params]
 

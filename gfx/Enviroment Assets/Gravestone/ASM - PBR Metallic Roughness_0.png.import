@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ci387pmkgs6b3"
-path.s3tc="res://.godot/imported/PBR - Metallic Roughness Alpha-blend_1.png-4be66c7c89afa2ebd1a76fc22b6e9fd9.s3tc.ctex"
+uid="uid://bwssf57ivdjjr"
+path.s3tc="res://.godot/imported/ASM - PBR Metallic Roughness_0.png-f5131fe3a206e5cac80e8bb0c3556c09.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "913d0d9678acdd1d0ea8274bbbc6d4da"
+"md5": "3f5b5b889d2c82667aa0d04481464296"
 }
 
 [deps]
 
-source_file="res://gfx/Enviroment Assets/PBR - Metallic Roughness Alpha-blend_1.png"
-dest_files=["res://.godot/imported/PBR - Metallic Roughness Alpha-blend_1.png-4be66c7c89afa2ebd1a76fc22b6e9fd9.s3tc.ctex"]
+source_file="res://gfx/Enviroment Assets/Gravestone/ASM - PBR Metallic Roughness_0.png"
+dest_files=["res://.godot/imported/ASM - PBR Metallic Roughness_0.png-f5131fe3a206e5cac80e8bb0c3556c09.s3tc.ctex"]
 
 [params]
 
@@ -27,8 +27,8 @@ compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=8
-roughness/src_normal="res://gfx/Enviroment Assets/PBR - Metallic Roughness Alpha-blend_2.png"
+roughness/mode=0
+roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false

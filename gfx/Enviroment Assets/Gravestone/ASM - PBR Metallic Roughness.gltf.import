@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://ci4mk1prwd3ux"
-path="res://.godot/imported/GraveStone_Godot.glb-1d0ce8f5639f9daae8d1638d4b659f86.scn"
+uid="uid://4s6ydphri8r0"
+path="res://.godot/imported/ASM - PBR Metallic Roughness.gltf-a46cf093097aa17052611d87d55e4667.scn"
 
 [deps]
 
-source_file="res://gfx/Enviroment Assets/GraveStone_Godot.glb"
-dest_files=["res://.godot/imported/GraveStone_Godot.glb-1d0ce8f5639f9daae8d1638d4b659f86.scn"]
+source_file="res://gfx/Enviroment Assets/Gravestone/ASM - PBR Metallic Roughness.gltf"
+dest_files=["res://.godot/imported/ASM - PBR Metallic Roughness.gltf-a46cf093097aa17052611d87d55e4667.scn"]
 
 [params]
 
