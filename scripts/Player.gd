@@ -6,6 +6,7 @@ const GRAVITY = 0.980*5
 
 @export var MoveSpeed: float = 60
 @export var DirRef: Node3D
+@export var Player2: bool = false
 
 
 var velocity: Vector3 = Vector3.ZERO
@@ -21,7 +22,11 @@ func is_on_floor() -> bool:
 	return global_position.y < 0.01
 
 func _ready() -> void:
-	Global.player = self
+	if !Player2:
+		Global.player1 = self
+	else:
+		Global.player2 = self
+		
 	Global.add_friendly(self)
 	resetPos = global_position
 

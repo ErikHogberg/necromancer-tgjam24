@@ -95,8 +95,10 @@ func _process(delta: float) -> void:
 	
 	match currentState:
 		State.Idle:
-			if Global.player.global_position.distance_squared_to(global_position) < SightDistance*SightDistance:
-				target = Global.player
+			if Global.player1.global_position.distance_squared_to(global_position) < SightDistance*SightDistance:
+				target = Global.player1
+			elif Global.player2.global_position.distance_squared_to(global_position) < SightDistance*SightDistance:
+				target = Global.player2
 				enter_state(State.Follow)
 		State.Attacking:
 			attackTimer -= delta

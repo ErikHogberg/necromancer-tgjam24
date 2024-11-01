@@ -3,7 +3,8 @@ extends Node
 
 var current_scene = null
 
-var player: Node3D
+var player1: Node3D
+var player2: Node3D
 var friendlies: Array[Node3D] = []
 var hostiles: Array[Node3D] = []
 

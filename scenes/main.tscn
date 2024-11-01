@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://cg0lwr63age0v"]
+[gd_scene load_steps=44 format=3 uid="uid://cg0lwr63age0v"]
 
 [ext_resource type="QuadMesh" uid="uid://c72qv7tsxflig" path="res://gfx/summonCircleMesh.tres" id="1_7tuv2"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_l8nk1"]
@@ -285,12 +285,47 @@ _data = {
 "run4": SubResource("Animation_udv38")
 }
 
+[sub_resource type="Gradient" id="Gradient_y1efl"]
+colors = PackedColorArray(0, 0, 0, 1, 0.337255, 0.345098, 1, 1)
+
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_mu5u8"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_rsi8r"]
 width = 64
 height = 64
+color_ramp = SubResource("Gradient_y1efl")
 noise = SubResource("FastNoiseLite_mu5u8")
+
+[sub_resource type="Gradient" id="Gradient_fxs87"]
+colors = PackedColorArray(0, 0, 0, 1, 0.293221, 0.536997, 0, 1)
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_m8d7s"]
+width = 64
+height = 64
+color_ramp = SubResource("Gradient_fxs87")
+noise = SubResource("FastNoiseLite_mu5u8")
+
+[sub_resource type="Gradient" id="Gradient_5lsmd"]
+colors = PackedColorArray(0, 0, 0, 1, 0.529425, 0.402035, 0.614928, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_tbi6y"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_s2adm"]
+width = 64
+height = 64
+color_ramp = SubResource("Gradient_5lsmd")
+noise = SubResource("FastNoiseLite_tbi6y")
+
+[sub_resource type="Gradient" id="Gradient_wqy2k"]
+colors = PackedColorArray(0, 0, 0, 1, 0.792095, 0.241497, 0.173587, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_mcrsn"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_hxibq"]
+width = 64
+height = 64
+color_ramp = SubResource("Gradient_wqy2k")
+noise = SubResource("FastNoiseLite_mcrsn")
 
 [sub_resource type="GDScript" id="GDScript_lqlxe"]
 script/source = "extends ColorRect
@@ -298,11 +333,14 @@ script/source = "extends ColorRect
 var initSize = 0.0
 var hpBuffer = 0.0
 @export var followBar: ColorRect # note: has to have same x scale as this bar
+var parent: Control
 
 func _ready() -> void:
 	initSize = scale.x
+	parent = get_parent()
 
 func _process(delta: float) -> void:
+	#parent.rotation_degrees = move_toward(parent.rotation_degrees, 70, delta*20)
 	var px = Global.hp / 100 * initSize
 	scale.x = px
 	hpBuffer = move_toward(hpBuffer, px, delta*0.20)
@@ -556,32 +594,36 @@ grow_vertical = 2
 alignment = 1
 
 [node name="Button" type="Button" parent="HUD Canvas/Toolbar/HBoxContainer"]
+custom_minimum_size = Vector2(99, 99)
 layout_mode = 2
+size_flags_vertical = 4
 text = "raise"
 icon = SubResource("NoiseTexture2D_rsi8r")
 icon_alignment = 1
-vertical_icon_alignment = 0
 
 [node name="Button2" type="Button" parent="HUD Canvas/Toolbar/HBoxContainer"]
+custom_minimum_size = Vector2(99, 99)
 layout_mode = 2
+size_flags_vertical = 4
 text = "splode"
-icon = SubResource("NoiseTexture2D_rsi8r")
+icon = SubResource("NoiseTexture2D_m8d7s")
 icon_alignment = 1
-vertical_icon_alignment = 0
 
 [node name="Button3" type="Button" parent="HUD Canvas/Toolbar/HBoxContainer"]
+custom_minimum_size = Vector2(99, 99)
 layout_mode = 2
+size_flags_vertical = 4
 text = "merge"
-icon = SubResource("NoiseTexture2D_rsi8r")
+icon = SubResource("NoiseTexture2D_s2adm")
 icon_alignment = 1
-vertical_icon_alignment = 0
 
 [node name="Button4" type="Button" parent="HUD Canvas/Toolbar/HBoxContainer"]
+custom_minimum_size = Vector2(99, 99)
 layout_mode = 2
+size_flags_vertical = 4
 text = "consoom"
-icon = SubResource("NoiseTexture2D_rsi8r")
+icon = SubResource("NoiseTexture2D_hxibq")
 icon_alignment = 1
-vertical_icon_alignment = 0
 
 [node name="ColorRect" type="ColorRect" parent="HUD Canvas"]
 layout_mode = 0
@@ -589,7 +631,7 @@ offset_left = 20.0
 offset_top = 49.0
 offset_right = 359.0
 offset_bottom = 89.0
-rotation = 1.21649
+rotation = 1.22173
 color = Color(0.339634, 0.0013337, 0.591173, 1)
 
 [node name="ColorRect3" type="ColorRect" parent="HUD Canvas/ColorRect"]
@@ -616,6 +658,42 @@ offset_top = 28.0
 offset_right = 352.0
 offset_bottom = 51.0
 rotation = -0.13439
+text = "Life Energy"
+
+[node name="ColorRect2" type="ColorRect" parent="HUD Canvas"]
+visible = false
+layout_mode = 0
+offset_left = 1158.0
+offset_top = 56.0
+offset_right = 1497.0
+offset_bottom = 96.0
+rotation = 1.89717
+color = Color(0.128741, 0.267736, 0.385339, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="HUD Canvas/ColorRect2"]
+layout_mode = 0
+offset_left = -4.44469
+offset_top = -3.77419
+offset_right = 314.555
+offset_bottom = 25.2258
+
+[node name="ColorRect2" type="ColorRect" parent="HUD Canvas/ColorRect2" node_paths=PackedStringArray("followBar")]
+layout_mode = 0
+offset_left = -11.3811
+offset_top = 0.685169
+offset_right = 307.619
+offset_bottom = 29.6852
+color = Color(0.286241, 0.618919, 0.667757, 1)
+script = SubResource("GDScript_lqlxe")
+followBar = NodePath("../ColorRect3")
+
+[node name="Label" type="Label" parent="HUD Canvas/ColorRect2"]
+layout_mode = 0
+offset_left = 326.995
+offset_top = 70.9043
+offset_right = 416.995
+offset_bottom = 93.9043
+rotation = -2.83895
 text = "Life Energy"
 
 [connection signal="on_flip" from="Player" to="Player/Sprite3D" method="set_flip_h"]
