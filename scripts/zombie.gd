@@ -10,6 +10,8 @@ enum State { Idle, Follow, Attacking, Chasing, Thinking}
 @export var FollowDistance= 2.0
 
 const FOLLOW_SPEED = 10.0
+const a = 2
+const avoidance_dist: float = a * a
 
 const followMinMax = Vector2(1,1000)
 const speedMinMax = Vector2(0.1,100)
@@ -23,13 +25,12 @@ var thinkingTimer = -1.0
 
 func die():
 	Global.remove_friendly(self)
-	
+
 func revive():
 	Global.add_friendly(self)
 
 func _ready():
 	revive()
-	
 
 func attack():
 	if !target:
@@ -39,7 +40,6 @@ func attack():
 	if target.global_position.distance_squared_to(global_position) > MeleeDistance*MeleeDistance:
 		enter_state(State.Chasing)
 
-	
 func chase():
 	if !target:
 		enter_state(State.Idle)
@@ -54,6 +54,11 @@ func follow(delta: float):
 		return
 		
 	# TODO: separation to other zombies/friendlies. boids?
+	var avoidance = Vector3.ZERO
+	var closestFriendly = Global.get_closest_friendly(global_position, self)
+	if closestFriendly and closestFriendly.global_position.distance_squared_to(global_position) < avoidance_dist:
+		avoidance = -global_position.direction_to(closestFriendly.global_position)
+		global_position += avoidance * (delta * FOLLOW_SPEED)
 		
 	var dist = target.global_position.distance_to(global_position)
 	if dist > FollowDistance:
