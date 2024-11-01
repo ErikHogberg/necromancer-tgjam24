@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://cg0lwr63age0v"]
+[gd_scene load_steps=52 format=3 uid="uid://cg0lwr63age0v"]
 
 [ext_resource type="QuadMesh" uid="uid://c72qv7tsxflig" path="res://gfx/summonCircleMesh.tres" id="1_7tuv2"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_l8nk1"]
@@ -285,6 +285,14 @@ _data = {
 "run4": SubResource("Animation_udv38")
 }
 
+[sub_resource type="InputEventKey" id="InputEventKey_s7ljn"]
+device = -1
+keycode = 49
+unicode = 49
+
+[sub_resource type="Shortcut" id="Shortcut_yaauc"]
+events = [SubResource("InputEventKey_s7ljn")]
+
 [sub_resource type="Gradient" id="Gradient_y1efl"]
 colors = PackedColorArray(0, 0, 0, 1, 0.337255, 0.345098, 1, 1)
 
@@ -296,6 +304,14 @@ height = 64
 color_ramp = SubResource("Gradient_y1efl")
 noise = SubResource("FastNoiseLite_mu5u8")
 
+[sub_resource type="InputEventKey" id="InputEventKey_bpsxk"]
+device = -1
+keycode = 50
+unicode = 50
+
+[sub_resource type="Shortcut" id="Shortcut_t4snd"]
+events = [SubResource("InputEventKey_bpsxk")]
+
 [sub_resource type="Gradient" id="Gradient_fxs87"]
 colors = PackedColorArray(0, 0, 0, 1, 0.293221, 0.536997, 0, 1)
 
@@ -304,6 +320,14 @@ width = 64
 height = 64
 color_ramp = SubResource("Gradient_fxs87")
 noise = SubResource("FastNoiseLite_mu5u8")
+
+[sub_resource type="InputEventKey" id="InputEventKey_rry6p"]
+device = -1
+keycode = 51
+unicode = 51
+
+[sub_resource type="Shortcut" id="Shortcut_ojfdx"]
+events = [SubResource("InputEventKey_rry6p")]
 
 [sub_resource type="Gradient" id="Gradient_5lsmd"]
 colors = PackedColorArray(0, 0, 0, 1, 0.529425, 0.402035, 0.614928, 1)
@@ -315,6 +339,14 @@ width = 64
 height = 64
 color_ramp = SubResource("Gradient_5lsmd")
 noise = SubResource("FastNoiseLite_tbi6y")
+
+[sub_resource type="InputEventKey" id="InputEventKey_wdgcw"]
+device = -1
+keycode = 52
+unicode = 52
+
+[sub_resource type="Shortcut" id="Shortcut_am6fe"]
+events = [SubResource("InputEventKey_wdgcw")]
 
 [sub_resource type="Gradient" id="Gradient_wqy2k"]
 colors = PackedColorArray(0, 0, 0, 1, 0.792095, 0.241497, 0.173587, 1)
@@ -593,34 +625,38 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="Button" type="Button" parent="HUD Canvas/Toolbar/HBoxContainer"]
+[node name="raise" type="Button" parent="HUD Canvas/Toolbar/HBoxContainer"]
 custom_minimum_size = Vector2(99, 99)
 layout_mode = 2
 size_flags_vertical = 4
+shortcut = SubResource("Shortcut_yaauc")
 text = "raise"
 icon = SubResource("NoiseTexture2D_rsi8r")
 icon_alignment = 1
 
-[node name="Button2" type="Button" parent="HUD Canvas/Toolbar/HBoxContainer"]
+[node name="splode" type="Button" parent="HUD Canvas/Toolbar/HBoxContainer"]
 custom_minimum_size = Vector2(99, 99)
 layout_mode = 2
 size_flags_vertical = 4
+shortcut = SubResource("Shortcut_t4snd")
 text = "splode"
 icon = SubResource("NoiseTexture2D_m8d7s")
 icon_alignment = 1
 
-[node name="Button3" type="Button" parent="HUD Canvas/Toolbar/HBoxContainer"]
+[node name="merge" type="Button" parent="HUD Canvas/Toolbar/HBoxContainer"]
 custom_minimum_size = Vector2(99, 99)
 layout_mode = 2
 size_flags_vertical = 4
+shortcut = SubResource("Shortcut_ojfdx")
 text = "merge"
 icon = SubResource("NoiseTexture2D_s2adm")
 icon_alignment = 1
 
-[node name="Button4" type="Button" parent="HUD Canvas/Toolbar/HBoxContainer"]
+[node name="consoom" type="Button" parent="HUD Canvas/Toolbar/HBoxContainer"]
 custom_minimum_size = Vector2(99, 99)
 layout_mode = 2
 size_flags_vertical = 4
+shortcut = SubResource("Shortcut_am6fe")
 text = "consoom"
 icon = SubResource("NoiseTexture2D_hxibq")
 icon_alignment = 1
@@ -704,3 +740,7 @@ text = "Life Energy"
 [connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D3" method="summon"]
 [connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D4" method="summon"]
 [connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D5" method="summon"]
+[connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/raise" to="Player" method="equip_raise"]
+[connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/splode" to="Player" method="equip_splode"]
+[connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/merge" to="Player" method="equip_merge"]
+[connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/consoom" to="Player" method="equip_consoom"]

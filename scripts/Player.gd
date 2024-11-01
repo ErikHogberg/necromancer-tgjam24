@@ -100,3 +100,12 @@ func _process(delta: float) -> void:
 	if global_position.y < 0: global_position.y = 0
 	
 	on_move.emit(Vector2(global_position.x,global_position.z))
+
+func equip_raise():
+	pass
+func equip_splode():
+	pass
+func equip_merge():
+	pass
+func equip_consoom():
+	pass
