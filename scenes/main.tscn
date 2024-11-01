@@ -155,13 +155,19 @@ func _input(event: InputEvent) -> void:
 	
 	if event is InputEventMouseButton:
 		match event.button_index:
-			MOUSE_BUTTON_RIGHT:
-				show_summon_circle.emit(event.pressed)
-				if !event.pressed:
-					summon.emit()
+			#MOUSE_BUTTON_RIGHT:
+				#show_summon_circle.emit(event.pressed)
+				#if !event.pressed:
+					#summon.emit()
 			MOUSE_BUTTON_LEFT:
 				if event.pressed:
 					shoot()
+					
+	if event.is_action_pressed(\"summon\"):
+		show_summon_circle.emit(true)
+	if event.is_action_released(\"summon\"):
+		show_summon_circle.emit(false)
+		summon.emit()
 	if event.is_action_pressed(\"quit\"):
 		get_tree().quit()
 	if event.is_action_pressed(\"reset player\"):
@@ -410,6 +416,7 @@ DirRef = NodePath("../Cam Yaw")
 
 [node name="zombie spawns" type="Node3D" parent="Player"]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0.286009, 0)
+visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Player/zombie spawns"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -1.20845, 0, -0.0684231)
