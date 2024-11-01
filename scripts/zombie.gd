@@ -69,7 +69,7 @@ func follow(delta: float):
 		
 
 func enter_state(new_state: State):
-	print("enter state ", State.keys()[new_state])
+	#print("enter state ", State.keys()[new_state])
 	currentState = new_state
 	match new_state:
 		State.Idle:
