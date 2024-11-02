@@ -23,6 +23,7 @@ var nextState = State.Idle
 var attackTimer = -1.0
 var thinkingTimer = -1.0
 
+
 func die():
 	Global.remove_friendly(self)
 
@@ -53,7 +54,7 @@ func follow(delta: float):
 		enter_state(State.Idle)
 		return
 		
-	# TODO: separation to other zombies/friendlies. boids?
+	var oldPos = global_position
 	var avoidance = Vector3.ZERO
 	var closestFriendly = Global.get_closest_friendly(global_position, self)
 	if closestFriendly and closestFriendly.global_position.distance_squared_to(global_position) < avoidance_dist:
@@ -66,7 +67,11 @@ func follow(delta: float):
 		var speed = distLerp* (speedMinMax.y-speedMinMax.x) + speedMinMax.x
 		global_position = global_position.move_toward(target.global_position, delta*speed*FOLLOW_SPEED)
 		global_position.y = 0
-		
+	
+	var dirAngle =oldPos.signed_angle_to(global_position, Vector3.DOWN)
+	
+	#turn.emit(dirAngle)
+	rotation.y = dirAngle
 
 func enter_state(new_state: State):
 	#print("enter state ", State.keys()[new_state])
@@ -97,6 +102,7 @@ func _process(delta: float) -> void:
 		State.Idle:
 			if Global.player1.global_position.distance_squared_to(global_position) < SightDistance*SightDistance:
 				target = Global.player1
+				enter_state(State.Follow)
 			elif Global.player2 and Global.player2.global_position.distance_squared_to(global_position) < SightDistance*SightDistance:
 				target = Global.player2
 				enter_state(State.Follow)

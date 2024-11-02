@@ -316,7 +316,7 @@ func refresh_stones():
 func _ready() -> void:
 	refresh_stones()
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if refPos.distance_squared_to(global_position) > Buffer*Buffer:
 		refresh_stones()
 "

@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://cjv1ybdpcwsqh"]
+[gd_scene load_steps=8 format=3 uid="uid://cjv1ybdpcwsqh"]
 
 [ext_resource type="Script" path="res://scripts/zombie.gd" id="1_u0lg6"]
 [ext_resource type="Texture2D" uid="uid://ba4xa50tcwpc5" path="res://gfx/Sprites/Monsters_Creatures_Fantasy/Skeleton/Walk.png" id="2_iieh0"]
+[ext_resource type="PackedScene" uid="uid://cqik4wkn2po3l" path="res://gfx/Friendly Dead Models/Skull/Skull.gltf" id="3_37mb3"]
 
 [sub_resource type="Animation" id="Animation_rqm6h"]
 length = 0.001
@@ -75,3 +76,6 @@ libraries = {
 }
 autoplay = "run4"
 speed_scale = 3.0
+
+[node name="Skull" parent="." instance=ExtResource("3_37mb3")]
+transform = Transform3D(-1, 0, 1.50996e-07, 0, 1, 0, -1.50996e-07, 0, -1, 0.0460191, 4.38991, -0.34761)

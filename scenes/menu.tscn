@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://yo5fu0jdc11"]
+[gd_scene load_steps=16 format=3 uid="uid://yo5fu0jdc11"]
 
 [ext_resource type="PackedScene" uid="uid://gbc3ppf08ty" path="res://gfx/Goose/PBR - Metallic Roughness Alpha-blend.glb" id="1_0e4bw"]
 
@@ -205,7 +205,7 @@ _data = {
 }
 
 [sub_resource type="SystemFont" id="SystemFont_3vsms"]
-font_names = PackedStringArray("FreeMono")
+font_names = PackedStringArray("Algerian")
 
 [sub_resource type="LabelSettings" id="LabelSettings_80xye"]
 font = SubResource("SystemFont_3vsms")
@@ -215,16 +215,16 @@ shadow_size = 10
 shadow_color = Color(0, 0, 0, 1)
 
 [sub_resource type="SystemFont" id="SystemFont_s2qmd"]
-font_names = PackedStringArray("FreeMono")
+font_names = PackedStringArray("Agency FB")
 
 [sub_resource type="SystemFont" id="SystemFont_v5kli"]
-font_names = PackedStringArray("FreeMono")
+font_names = PackedStringArray("Agency FB")
 
 [sub_resource type="Theme" id="Theme_e71ti"]
 /fonts/asdf = SubResource("SystemFont_s2qmd")
 Button/colors/font_color = Color(0.935018, 0.634259, 0.587104, 1)
 Button/constants/outline_size = 38
-Button/font_sizes/font_size = 38
+Button/font_sizes/font_size = 56
 Button/fonts/font = SubResource("SystemFont_v5kli")
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_nn6ro"]
@@ -232,6 +232,14 @@ Button/fonts/font = SubResource("SystemFont_v5kli")
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ak4yw"]
 height = 128
 noise = SubResource("FastNoiseLite_nn6ro")
+
+[sub_resource type="GDScript" id="GDScript_0f4qt"]
+script/source = "extends Button
+
+
+func press():
+	get_tree().change_scene_to_file(\"res://scenes/main.tscn\")
+"
 
 [node name="Menu" type="Node3D"]
 
@@ -264,9 +272,11 @@ autoplay = "new_animation"
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Label" type="Label" parent="Control"]
 layout_mode = 0
@@ -280,12 +290,19 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Button" type="Button" parent="Control"]
-layout_mode = 0
-offset_left = 144.0
-offset_top = 460.0
-offset_right = 895.0
-offset_bottom = 596.0
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 63.0
+offset_top = -163.0
+offset_right = 814.0
+offset_bottom = -27.0
+grow_vertical = 0
 theme = SubResource("Theme_e71ti")
 text = "sTART (if u dare)"
 icon = SubResource("NoiseTexture2D_ak4yw")
 icon_alignment = 1
+script = SubResource("GDScript_0f4qt")
+
+[connection signal="pressed" from="Control/Button" to="Control/Button" method="press"]
