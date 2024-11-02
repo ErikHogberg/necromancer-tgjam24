@@ -1,0 +1,178 @@
+[gd_scene load_steps=13 format=3 uid="uid://docl0xu754qjo"]
+
+[ext_resource type="Texture2D" uid="uid://b3emqeoocexpj" path="res://gfx/Sprites/Wizard Pack/Run.png" id="1_jyfh6"]
+[ext_resource type="Texture2D" uid="uid://b7yoid2efejrk" path="res://gfx/Sprites/EVil Wizard 2/Sprites/Run.png" id="2_kww83"]
+[ext_resource type="Texture2D" uid="uid://dvsscef8tiv13" path="res://gfx/Sprites/Evil Wizard/Sprites/Move.png" id="3_m4bkj"]
+[ext_resource type="Texture2D" uid="uid://iqtijin7wi10" path="res://gfx/Sprites/Hero Knight 2/Sprites/Run.png" id="4_0rqyo"]
+[ext_resource type="Texture2D" uid="uid://vbeelnux8ub3" path="res://gfx/Sprites/Medieval King Pack 2/Sprites/Run.png" id="5_6f2ed"]
+[ext_resource type="Texture2D" uid="uid://ccckh33e3yabh" path="res://gfx/Sprites/Medieval Warrior Pack 2/Sprites/Run.png" id="6_0mac1"]
+[ext_resource type="Texture2D" uid="uid://bm4exy50t4o7q" path="res://gfx/Sprites/Martial Hero 2/Sprites/Run.png" id="7_cuowh"]
+[ext_resource type="Texture2D" uid="uid://csyp2suf4wl5o" path="res://gfx/Sprites/Martial Hero/Sprites/Run.png" id="8_mtou2"]
+
+[sub_resource type="Animation" id="Animation_rqm6h"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_8g5ho"]
+resource_name = "run"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.93),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0, 7]
+}
+
+[sub_resource type="Animation" id="Animation_udv38"]
+resource_name = "run4"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.9),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mllyv"]
+_data = {
+"RESET": SubResource("Animation_rqm6h"),
+"run": SubResource("Animation_8g5ho"),
+"run4": SubResource("Animation_udv38")
+}
+
+[node name="Characters" type="Node3D"]
+
+[node name="Wizard" type="Sprite3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 14, 2.98386, 0)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("1_jyfh6")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Wizard"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 6.0
+
+[node name="Evil Wizard" type="Sprite3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 21.805, 2.98386, 0)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("2_kww83")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Evil Wizard"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 6.0
+
+[node name="Evil Wizard2" type="Sprite3D" parent="."]
+transform = Transform3D(6, 0, 0, 0, 6, 0, 0, 0, 6, 17.3946, 2.10592, 3.82197)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("3_m4bkj")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Evil Wizard2"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 6.0
+
+[node name="Sprite3D3" type="Sprite3D" parent="."]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 27.4198, 1.59398, 0)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("4_0rqyo")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite3D3"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 3.0
+
+[node name="Sprite3D4" type="Sprite3D" parent="."]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 34.3918, 4.59625, -0.0107918)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("5_6f2ed")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite3D4"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 3.0
+
+[node name="Sprite3D5" type="Sprite3D" parent="."]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 29.495, 2.83874, 5.57287)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("6_0mac1")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite3D5"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 3.0
+
+[node name="Sprite3D6" type="Sprite3D" parent="."]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 8.38396, 2.83874, 17.262)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("7_cuowh")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite3D6"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 3.0
+
+[node name="Sprite3D7" type="Sprite3D" parent="."]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 16.0673, 2.5076, 17.262)
+billboard = 2
+texture_filter = 0
+texture = ExtResource("8_mtou2")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite3D7"]
+libraries = {
+"": SubResource("AnimationLibrary_mllyv")
+}
+autoplay = "run"
+speed_scale = 3.0

@@ -85,6 +85,7 @@ func _process(delta: float) -> void:
 	if DirRef:
 		#direction = direction.rotated(DirRef.global_position.signed_angle_to(global_position, Vector3.DOWN))
 		refBasis = DirRef.global_basis
+		global_rotation = DirRef.global_rotation
 		
 	var direction := (refBasis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
@@ -100,6 +101,7 @@ func _process(delta: float) -> void:
 	if global_position.y < 0: global_position.y = 0
 	
 	on_move.emit(Vector2(global_position.x,global_position.z))
+	
 
 func equip_raise():
 	pass

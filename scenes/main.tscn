@@ -1,18 +1,11 @@
-[gd_scene load_steps=54 format=3 uid="uid://cg0lwr63age0v"]
+[gd_scene load_steps=47 format=3 uid="uid://cg0lwr63age0v"]
 
 [ext_resource type="QuadMesh" uid="uid://c72qv7tsxflig" path="res://gfx/summonCircleMesh.tres" id="1_7tuv2"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_l8nk1"]
 [ext_resource type="Texture2D" uid="uid://c18busabi562l" path="res://gfx/Sprites/Evil Wizard 3/Sprites/Run.png" id="1_nbkfe"]
 [ext_resource type="Script" path="res://scripts/summonNode.gd" id="2_jlwc0"]
 [ext_resource type="PackedScene" uid="uid://cjv1ybdpcwsqh" path="res://prefabs/zombie.tscn" id="4_1pmvf"]
-[ext_resource type="Texture2D" uid="uid://b3emqeoocexpj" path="res://gfx/Sprites/Wizard Pack/Run.png" id="4_mjgtt"]
-[ext_resource type="Texture2D" uid="uid://b7yoid2efejrk" path="res://gfx/Sprites/EVil Wizard 2/Sprites/Run.png" id="5_kddxm"]
-[ext_resource type="Texture2D" uid="uid://dvsscef8tiv13" path="res://gfx/Sprites/Evil Wizard/Sprites/Move.png" id="6_3bjep"]
-[ext_resource type="Texture2D" uid="uid://iqtijin7wi10" path="res://gfx/Sprites/Hero Knight 2/Sprites/Run.png" id="7_f1ved"]
-[ext_resource type="Texture2D" uid="uid://vbeelnux8ub3" path="res://gfx/Sprites/Medieval King Pack 2/Sprites/Run.png" id="8_leh5c"]
-[ext_resource type="Texture2D" uid="uid://ccckh33e3yabh" path="res://gfx/Sprites/Medieval Warrior Pack 2/Sprites/Run.png" id="9_rml13"]
-[ext_resource type="Texture2D" uid="uid://bm4exy50t4o7q" path="res://gfx/Sprites/Martial Hero 2/Sprites/Run.png" id="10_jps67"]
-[ext_resource type="Texture2D" uid="uid://csyp2suf4wl5o" path="res://gfx/Sprites/Martial Hero/Sprites/Run.png" id="11_3317n"]
+[ext_resource type="PackedScene" uid="uid://22eqere84d0x" path="res://prefabs/tombstone.tscn" id="7_7h5fj"]
 [ext_resource type="PackedScene" uid="uid://gbc3ppf08ty" path="res://gfx/Goose/PBR - Metallic Roughness Alpha-blend.glb" id="14_ivteh"]
 
 [sub_resource type="GDScript" id="GDScript_am0de"]
@@ -115,6 +108,25 @@ albedo_texture = SubResource("NoiseTexture2D_5csxy")
 material = SubResource("StandardMaterial3D_3pkho")
 size = Vector2(100, 100)
 
+[sub_resource type="GDScript" id="GDScript_wije0"]
+script/source = "extends Node3D
+
+@export var leftRot: Vector3
+@export var rightRot: Vector3
+
+func left():
+	rotation_degrees = leftRot
+	
+func right():
+	rotation_degrees = rightRot
+
+func turn(left: bool):
+	if left:
+		left()
+	else:
+		right()
+"
+
 [sub_resource type="Animation" id="Animation_t3tpp"]
 length = 0.001
 tracks/0/type = "value"
@@ -152,6 +164,72 @@ _data = {
 "run": SubResource("Animation_je5x1")
 }
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_at773"]
+gravity = Vector3(0, 0, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g27cc"]
+shading_mode = 2
+diffuse_mode = 3
+specular_mode = 2
+albedo_color = Color(0.376471, 1, 0.156863, 1)
+emission_enabled = true
+emission = Color(0.215686, 1, 0.262745, 1)
+emission_energy_multiplier = 5.04
+
+[sub_resource type="QuadMesh" id="QuadMesh_4us6d"]
+material = SubResource("StandardMaterial3D_g27cc")
+orientation = 1
+
+[sub_resource type="GDScript" id="GDScript_wn8fd"]
+script/source = "extends Node3D
+
+@export var TombstonePrefab: PackedScene
+@export var TombstoneParent: Node3D
+
+@export var Distance: float = 500
+@export var Buffer: float = 100
+
+@export var StoneCapacity: int = 100
+@export var MaxNewStones: int = 5
+
+var refPos: Vector3
+
+var stones: Array[Node3D] = []
+
+func stone_pos() -> Vector3:
+	var pos = to_global((Vector3.FORWARD*Distance).rotated(Vector3.UP, randf()*PI*2.0))
+	pos.y = 0
+	return pos
+
+func spawn_stone():
+	var newStone = TombstonePrefab.instantiate() as Node3D
+	TombstoneParent.add_child(newStone)
+	newStone.global_position = stone_pos()
+	stones.push_back(newStone)
+	print(\"new stone at \", newStone.global_position )
+
+func refresh_stones():
+	# idea: check dir from old refpos, only move stones in that dir
+	refPos = global_position
+	var sqr = Distance*Distance + Buffer*Buffer
+	
+	for stone in stones:
+		if stone.global_position.distance_squared_to(refPos) > sqr:
+			stone.global_position = stone_pos()
+	
+	var newCount = min(MaxNewStones,StoneCapacity - stones.size())
+	for i in newCount:
+		spawn_stone.call_deferred()
+	
+
+func _ready() -> void:
+	refresh_stones()
+
+func _process(_delta: float) -> void:
+	if refPos.distance_squared_to(global_position) > Buffer*Buffer:
+		refresh_stones()
+"
+
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bpj4x"]
 sky_curve = 0.47075
 ground_bottom_color = Color(0.34375, 0.449436, 0.279994, 1)
@@ -162,6 +240,7 @@ sky_material = SubResource("ProceduralSkyMaterial_bpj4x")
 [sub_resource type="Environment" id="Environment_3gvms"]
 background_mode = 2
 sky = SubResource("Sky_bwetu")
+glow_enabled = true
 
 [sub_resource type="GDScript" id="GDScript_1mlub"]
 script/source = "extends Camera3D
@@ -230,95 +309,6 @@ func _process(delta: float) -> void:
 	YawParent.rotation.y = yaw
 	PitchParent.rotation.x = pitch
 	
-"
-
-[sub_resource type="Animation" id="Animation_rqm6h"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
-}
-
-[sub_resource type="Animation" id="Animation_8g5ho"]
-resource_name = "run"
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = false
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.93),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0, 7]
-}
-
-[sub_resource type="Animation" id="Animation_udv38"]
-resource_name = "run4"
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = false
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.9),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0, 3]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_mllyv"]
-_data = {
-"RESET": SubResource("Animation_rqm6h"),
-"run": SubResource("Animation_8g5ho"),
-"run4": SubResource("Animation_udv38")
-}
-
-[sub_resource type="GDScript" id="GDScript_wn8fd"]
-script/source = "extends Node3D
-
-@export var TombstonePrefab: PackedScene
-
-@export var Distance: float = 500
-@export var Buffer: float = 100
-
-@export var StoneCapacity: int = 100
-@export var MaxNewStone: int = 5
-
-var refPos: Vector3
-
-var stones: Array[Node3D] = []
-
-
-func refresh_stones():
-	# idea: check dir from old refpos, only move stones in that dir
-	refPos = global_position
-	var sqr = Buffer*Buffer
-	
-	for stone in stones:
-		if stone.global_position.distance_squared_to(refPos) > sqr:
-			pass
-	
-	pass
-
-func _ready() -> void:
-	refresh_stones()
-
-func _process(_delta: float) -> void:
-	if refPos.distance_squared_to(global_position) > Buffer*Buffer:
-		refresh_stones()
 "
 
 [sub_resource type="InputEventKey" id="InputEventKey_s7ljn"]
@@ -446,8 +436,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = ExtResource("1_l8nk1")
 DirRef = NodePath("../Cam Yaw")
 
-[node name="PBR - Metallic Roughness Alpha-blend" parent="Player" instance=ExtResource("14_ivteh")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.673783, 2.31507, 1.39498)
+[node name="Node3D" type="Node3D" parent="Player"]
+transform = Transform3D(-0.908792, -4.47035e-08, -0.417248, 0.156304, 0.927184, -0.340439, 0.386866, -0.374607, -0.842618, -1.74846e-07, 1.30179, 0.552577)
+script = SubResource("GDScript_wije0")
+leftRot = Vector3(-20, -25, 10)
+rightRot = Vector3(20, -155, 10)
+
+[node name="PBR - Metallic Roughness Alpha-blend" parent="Player/Node3D" instance=ExtResource("14_ivteh")]
+transform = Transform3D(-0.170834, 0.482077, -1.9335, 0, 1.9406, 0.483844, 1.99269, 0.0413285, -0.165759, -0.27955, 1.33054, -0.589949)
 
 [node name="zombie spawns" type="Node3D" parent="Player"]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0.286009, 0)
@@ -485,6 +481,7 @@ zombie_prefab = ExtResource("4_1pmvf")
 
 [node name="Sprite3D" type="Sprite3D" parent="Player"]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 2.85773, 0)
+visible = false
 cast_shadow = 0
 gi_mode = 0
 billboard = 2
@@ -498,6 +495,23 @@ libraries = {
 }
 autoplay = "run"
 speed_scale = 6.0
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.626271, 0)
+amount = 32
+process_material = SubResource("ParticleProcessMaterial_at773")
+draw_pass_1 = SubResource("QuadMesh_4us6d")
+
+[node name="RayCast3D" type="RayCast3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.08782, 0)
+
+[node name="Tombstone Spawner" type="Node3D" parent="Player" node_paths=PackedStringArray("TombstoneParent")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+script = SubResource("GDScript_wn8fd")
+TombstonePrefab = ExtResource("7_7h5fj")
+TombstoneParent = NodePath("../..")
+Distance = 100.0
+Buffer = 50.0
 
 [node name="Cam Yaw" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.06615, 10.4074, 12.4275)
@@ -522,123 +536,6 @@ transform = Transform3D(0.848697, 0.441501, -0.291189, 0.252847, 0.144871, 0.956
 
 [node name="Zombie" parent="Enemies" instance=ExtResource("4_1pmvf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.3078, 0, -13.2464)
-
-[node name="Characters" type="Node3D" parent="."]
-
-[node name="Wizard" type="Sprite3D" parent="Characters"]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 14, 2.98386, 0)
-billboard = 2
-texture_filter = 0
-texture = ExtResource("4_mjgtt")
-hframes = 8
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Wizard"]
-libraries = {
-"": SubResource("AnimationLibrary_mllyv")
-}
-autoplay = "run"
-speed_scale = 6.0
-
-[node name="Evil Wizard" type="Sprite3D" parent="Characters"]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 21.805, 2.98386, 0)
-billboard = 2
-texture_filter = 0
-texture = ExtResource("5_kddxm")
-hframes = 8
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Evil Wizard"]
-libraries = {
-"": SubResource("AnimationLibrary_mllyv")
-}
-autoplay = "run"
-speed_scale = 6.0
-
-[node name="Evil Wizard2" type="Sprite3D" parent="Characters"]
-transform = Transform3D(6, 0, 0, 0, 6, 0, 0, 0, 6, 17.3946, 2.10592, 3.82197)
-billboard = 2
-texture_filter = 0
-texture = ExtResource("6_3bjep")
-hframes = 8
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Evil Wizard2"]
-libraries = {
-"": SubResource("AnimationLibrary_mllyv")
-}
-autoplay = "run"
-speed_scale = 6.0
-
-[node name="Sprite3D3" type="Sprite3D" parent="Characters"]
-transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 27.4198, 1.59398, 0)
-billboard = 2
-texture_filter = 0
-texture = ExtResource("7_f1ved")
-hframes = 8
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Sprite3D3"]
-libraries = {
-"": SubResource("AnimationLibrary_mllyv")
-}
-autoplay = "run"
-speed_scale = 3.0
-
-[node name="Sprite3D4" type="Sprite3D" parent="Characters"]
-transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 34.3918, 4.59625, -0.0107918)
-billboard = 2
-texture_filter = 0
-texture = ExtResource("8_leh5c")
-hframes = 8
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Sprite3D4"]
-libraries = {
-"": SubResource("AnimationLibrary_mllyv")
-}
-autoplay = "run"
-speed_scale = 3.0
-
-[node name="Sprite3D5" type="Sprite3D" parent="Characters"]
-transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 29.495, 2.83874, 5.57287)
-billboard = 2
-texture_filter = 0
-texture = ExtResource("9_rml13")
-hframes = 8
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Sprite3D5"]
-libraries = {
-"": SubResource("AnimationLibrary_mllyv")
-}
-autoplay = "run"
-speed_scale = 3.0
-
-[node name="Sprite3D6" type="Sprite3D" parent="Characters"]
-transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 8.38396, 2.83874, 17.262)
-billboard = 2
-texture_filter = 0
-texture = ExtResource("10_jps67")
-hframes = 8
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Sprite3D6"]
-libraries = {
-"": SubResource("AnimationLibrary_mllyv")
-}
-autoplay = "run"
-speed_scale = 3.0
-
-[node name="Sprite3D7" type="Sprite3D" parent="Characters"]
-transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 16.0673, 2.5076, 17.262)
-billboard = 2
-texture_filter = 0
-texture = ExtResource("11_3317n")
-hframes = 8
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Characters/Sprite3D7"]
-libraries = {
-"": SubResource("AnimationLibrary_mllyv")
-}
-autoplay = "run"
-speed_scale = 3.0
-
-[node name="Tombstone Spawner" type="Node3D" parent="."]
-script = SubResource("GDScript_wn8fd")
 
 [node name="HUD Canvas" type="Control" parent="."]
 layout_mode = 3
@@ -774,6 +671,7 @@ offset_bottom = 93.9043
 rotation = -2.83895
 text = "Life Energy"
 
+[connection signal="on_flip" from="Player" to="Player/Node3D" method="turn"]
 [connection signal="on_flip" from="Player" to="Player/Sprite3D" method="set_flip_h"]
 [connection signal="on_move" from="Player" to="BG" method="update_pos"]
 [connection signal="show_summon_circle" from="Player" to="Player/zombie spawns" method="set_visible"]
