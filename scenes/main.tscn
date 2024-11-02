@@ -120,8 +120,8 @@ func left():
 func right():
 	rotation_degrees = rightRot
 
-func turn(left: bool):
-	if left:
+func turn(turning_left: bool):
+	if turning_left:
 		left()
 	else:
 		right()
