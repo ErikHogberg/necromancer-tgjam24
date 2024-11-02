@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwssf57ivdjjr"
-path.s3tc="res://.godot/imported/ASM - PBR Metallic Roughness_0.png-f5131fe3a206e5cac80e8bb0c3556c09.s3tc.ctex"
+uid="uid://3ytvig4usg6u"
+path.s3tc="res://.godot/imported/GraveStone_3.png-e5dd9c7cb164e4dc1eb2be96f9883027.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "3f5b5b889d2c82667aa0d04481464296"
+"md5": "d1dd210d6b1312cb342b56d02bd5e651"
 }
 
 [deps]
 
-source_file="res://gfx/Enviroment Assets/Gravestone/ASM - PBR Metallic Roughness_0.png"
-dest_files=["res://.godot/imported/ASM - PBR Metallic Roughness_0.png-f5131fe3a206e5cac80e8bb0c3556c09.s3tc.ctex"]
+source_file="res://gfx/Enviroment Assets/Gravestone/GraveStone_3.png"
+dest_files=["res://.godot/imported/GraveStone_3.png-e5dd9c7cb164e4dc1eb2be96f9883027.s3tc.ctex"]
 
 [params]
 
