@@ -2,17 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cis2rpc6ebgx0"
-path.s3tc="res://.godot/imported/DefaultMaterial_baseColor.png-7cd00f55b5e57643e31326b1b43569c3.s3tc.ctex"
+uid="uid://b36krw81icd4d"
+path.s3tc="res://.godot/imported/GraveStone_1.png-1a47d6761381c49aacd0fc6e2e43774c.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
+generator_parameters={
+"md5": "913d0d9678acdd1d0ea8274bbbc6d4da"
+}
 
 [deps]
 
-source_file="res://gfx/Enviroment Assets/Gravestone/DefaultMaterial_baseColor.png"
-dest_files=["res://.godot/imported/DefaultMaterial_baseColor.png-7cd00f55b5e57643e31326b1b43569c3.s3tc.ctex"]
+source_file="res://gfx/Enviroment Assets/Gravestone/GraveStone_1.png"
+dest_files=["res://.godot/imported/GraveStone_1.png-1a47d6761381c49aacd0fc6e2e43774c.s3tc.ctex"]
 
 [params]
 
@@ -24,8 +27,8 @@ compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=0
-roughness/src_normal=""
+roughness/mode=8
+roughness/src_normal="res://gfx/Enviroment Assets/Gravestone/GraveStone_2.png"
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
