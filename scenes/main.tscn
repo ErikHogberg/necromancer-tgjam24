@@ -1,9 +1,10 @@
-[gd_scene load_steps=53 format=3 uid="uid://cg0lwr63age0v"]
+[gd_scene load_steps=56 format=3 uid="uid://cg0lwr63age0v"]
 
 [ext_resource type="QuadMesh" uid="uid://c72qv7tsxflig" path="res://gfx/summonCircleMesh.tres" id="1_7tuv2"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_l8nk1"]
 [ext_resource type="Texture2D" uid="uid://c18busabi562l" path="res://gfx/Sprites/Evil Wizard 3/Sprites/Run.png" id="1_nbkfe"]
 [ext_resource type="Script" path="res://scripts/summonNode.gd" id="2_jlwc0"]
+[ext_resource type="Animation" uid="uid://bgr8xg12soyiq" path="res://Animations/Silly_Goose_walking.res" id="3_2p1jf"]
 [ext_resource type="PackedScene" uid="uid://cjv1ybdpcwsqh" path="res://prefabs/zombie.tscn" id="4_1pmvf"]
 [ext_resource type="Texture2D" uid="uid://b3emqeoocexpj" path="res://gfx/Sprites/Wizard Pack/Run.png" id="4_mjgtt"]
 [ext_resource type="Texture2D" uid="uid://b7yoid2efejrk" path="res://gfx/Sprites/EVil Wizard 2/Sprites/Run.png" id="5_kddxm"]
@@ -114,6 +115,27 @@ albedo_texture = SubResource("NoiseTexture2D_5csxy")
 [sub_resource type="QuadMesh" id="QuadMesh_tn8qn"]
 material = SubResource("StandardMaterial3D_3pkho")
 size = Vector2(100, 100)
+
+[sub_resource type="Animation" id="Animation_fyusa"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, -0.26529)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_q0ro1"]
+_data = {
+"RESET": SubResource("Animation_fyusa"),
+"walking": ExtResource("3_2p1jf")
+}
 
 [sub_resource type="Animation" id="Animation_t3tpp"]
 length = 0.001
@@ -407,12 +429,20 @@ text = "1"
 font_size = 128
 
 [node name="Player" type="Node3D" parent="." node_paths=PackedStringArray("DirRef")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.428051, 0)
 script = ExtResource("1_l8nk1")
 DirRef = NodePath("../Cam Yaw")
 
-[node name="PBR - Metallic Roughness Alpha-blend" parent="Player" instance=ExtResource("14_ivteh")]
+[node name="Node3D" type="Node3D" parent="Player"]
+transform = Transform3D(0.965016, 0.262189, 0, -0.262189, 0.965016, 0, 0, 0, 1, 0, 0.90204, 0)
+
+[node name="PBR - Metallic Roughness Alpha-blend" parent="Player/Node3D" instance=ExtResource("14_ivteh")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.673783, 2.31507, 1.39498)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Node3D"]
+libraries = {
+"": SubResource("AnimationLibrary_q0ro1")
+}
 
 [node name="zombie spawns" type="Node3D" parent="Player"]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0.286009, 0)
@@ -449,7 +479,7 @@ script = ExtResource("2_jlwc0")
 zombie_prefab = ExtResource("4_1pmvf")
 
 [node name="Sprite3D" type="Sprite3D" parent="Player"]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 2.85773, 0)
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, -0.110849, 2.64728, -0.0268219)
 cast_shadow = 0
 gi_mode = 0
 billboard = 2
