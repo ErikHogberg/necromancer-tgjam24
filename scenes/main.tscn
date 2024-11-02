@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://cg0lwr63age0v"]
+[gd_scene load_steps=51 format=3 uid="uid://cg0lwr63age0v"]
 
 [ext_resource type="QuadMesh" uid="uid://c72qv7tsxflig" path="res://gfx/summonCircleMesh.tres" id="1_7tuv2"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_l8nk1"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cjv1ybdpcwsqh" path="res://prefabs/zombie.tscn" id="4_1pmvf"]
 [ext_resource type="PackedScene" uid="uid://22eqere84d0x" path="res://prefabs/tombstone.tscn" id="7_7h5fj"]
 [ext_resource type="Script" path="res://scripts/human.gd" id="8_550xb"]
+[ext_resource type="PackedScene" uid="uid://docl0xu754qjo" path="res://scenes/characters.tscn" id="9_v624p"]
 [ext_resource type="PackedScene" uid="uid://gbc3ppf08ty" path="res://gfx/Goose/PBR - Metallic Roughness Alpha-blend.glb" id="14_ivteh"]
 
 [sub_resource type="GDScript" id="GDScript_am0de"]
@@ -553,10 +554,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -67.2395, 0, -106.7)
 
 [node name="Human" type="Node3D" parent="Humans"]
 script = ExtResource("8_550xb")
+MeleeDistance = 5.0
+SightDistance = 33.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Humans/Human"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.41957, 0)
 mesh = SubResource("BoxMesh_putj3")
+
+[node name="Characters" parent="Humans" instance=ExtResource("9_v624p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.9787, 0, 99.0281)
 
 [node name="HUD Canvas" type="Control" parent="."]
 layout_mode = 3

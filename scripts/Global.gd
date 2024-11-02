@@ -55,3 +55,7 @@ func remove_hostile(hostile: Node3D):
 		if hostiles[i] == hostile:
 			hostiles.remove_at(i)
 			return
+
+func take_dmg():
+	hp -= 30
+	# todo: die if oom

@@ -1,9 +1,9 @@
 extends Node3D
 class_name Human
 
-enum State { Idle, Follow, Attacking, Chasing, Thinking}
+enum State { Idle, Attacking, Chasing, Thinking}
 
-@export var ThinkTime= 1.0
+@export var ThinkTime= .1
 @export var SwingTime= 1.0
 @export var MeleeDistance= 1.0
 @export var SightDistance= 10.0
@@ -40,39 +40,26 @@ func attack():
 		enter_state(State.Idle)
 		return
 	
+	# todo: swing
+	
 	if target.global_position.distance_squared_to(global_position) > MeleeDistance*MeleeDistance:
-		enter_state(State.Chasing)
+		nextState = State.Chasing
+		enter_state(State.Thinking)
+	else:
+		# todo: transfer dmg
+		Global.take_dmg()
+		enter_state(State.Attacking) # re-init attack state
 
-func chase():
+func chase(delta: float):
 	if !target:
 		enter_state(State.Idle)
 		return
 		
 	if target.global_position.distance_squared_to(global_position) < MeleeDistance*MeleeDistance:
 		enter_state(State.Attacking)
+	else: 
+		global_position = global_position.move_toward(target.global_position, delta*100)
 
-func follow(delta: float):
-	if !target:
-		enter_state(State.Idle)
-		return
-		
-	var oldPos = global_position
-	var avoidance = Vector3.ZERO
-	var closestFriendly = Global.get_closest_friendly(global_position, self)
-	if closestFriendly and closestFriendly.global_position.distance_squared_to(global_position) < avoidance_dist:
-		avoidance = -global_position.direction_to(closestFriendly.global_position)
-		global_position += avoidance * (delta * FOLLOW_SPEED)
-		
-	var dist = target.global_position.distance_to(global_position)
-	if dist > FollowDistance:
-		var distLerp = (dist - followMinMax.x) / (followMinMax.y-followMinMax.x)
-		var speed = distLerp* (speedMinMax.y-speedMinMax.x) + speedMinMax.x
-		global_position = global_position.move_toward(target.global_position, delta*speed*FOLLOW_SPEED)
-		global_position.y = 0
-	
-	var dirAngle =oldPos.signed_angle_to(global_position, Vector3.DOWN)
-	
-	rotation.y = dirAngle
 
 func enter_state(new_state: State):
 	#print("enter state ", State.keys()[new_state])
@@ -90,31 +77,23 @@ func enter_state(new_state: State):
 			pass
 		State.Thinking:
 			thinkingTimer = ThinkTime
-		State.Follow:
-			pass
 
 func think_then_enter_state(new_state: State):
 	nextState = new_state
 	enter_state(State.Thinking)
 
 func _process(delta: float) -> void:
-	
 	match currentState:
 		State.Idle:
 			if Global.player1.global_position.distance_squared_to(global_position) < SightDistance*SightDistance:
 				target = Global.player1
-				enter_state(State.Follow)
-			elif Global.player2 and Global.player2.global_position.distance_squared_to(global_position) < SightDistance*SightDistance:
-				target = Global.player2
-				enter_state(State.Follow)
+				enter_state(State.Chasing)
 		State.Attacking:
 			attackTimer -= delta
 			if attackTimer < 0:
 				attack()
-		State.Follow:
-			follow(delta)
 		State.Chasing:
-			chase()
+			chase(delta)
 		State.Thinking:
 			thinkingTimer -= delta
 			if thinkingTimer < 0:

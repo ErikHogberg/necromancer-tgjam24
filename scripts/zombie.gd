@@ -33,7 +33,8 @@ func revive():
 	Global.add_friendly(self)
 
 func _ready():
-	reused_projectile.visible = false
+	if reused_projectile:
+		reused_projectile.visible = false
 	revive()
 
 func attack():
