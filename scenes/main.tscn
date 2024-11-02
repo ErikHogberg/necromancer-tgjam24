@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://cg0lwr63age0v"]
+[gd_scene load_steps=54 format=3 uid="uid://cg0lwr63age0v"]
 
 [ext_resource type="QuadMesh" uid="uid://c72qv7tsxflig" path="res://gfx/summonCircleMesh.tres" id="1_7tuv2"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_l8nk1"]
@@ -285,6 +285,41 @@ _data = {
 "run": SubResource("Animation_8g5ho"),
 "run4": SubResource("Animation_udv38")
 }
+
+[sub_resource type="GDScript" id="GDScript_wn8fd"]
+script/source = "extends Node3D
+
+@export var TombstonePrefab: PackedScene
+
+@export var Distance: float = 500
+@export var Buffer: float = 100
+
+@export var StoneCapacity: int = 100
+@export var MaxNewStone: int = 5
+
+var refPos: Vector3
+
+var stones: Array[Node3D] = []
+
+
+func refresh_stones():
+	# idea: check dir from old refpos, only move stones in that dir
+	refPos = global_position
+	var sqr = Buffer*Buffer
+	
+	for stone in stones:
+		if stone.global_position.distance_squared_to(refPos) > sqr:
+			pass
+	
+	pass
+
+func _ready() -> void:
+	refresh_stones()
+
+func _process(delta: float) -> void:
+	if refPos.distance_squared_to(global_position) > Buffer*Buffer:
+		refresh_stones()
+"
 
 [sub_resource type="InputEventKey" id="InputEventKey_s7ljn"]
 device = -1
@@ -601,6 +636,9 @@ libraries = {
 }
 autoplay = "run"
 speed_scale = 3.0
+
+[node name="Tombstone Spawner" type="Node3D" parent="."]
+script = SubResource("GDScript_wn8fd")
 
 [node name="HUD Canvas" type="Control" parent="."]
 layout_mode = 3

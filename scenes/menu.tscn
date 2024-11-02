@@ -22,6 +22,93 @@ glow_enabled = true
 glow_bloom = 0.28
 glow_blend_mode = 0
 
+[sub_resource type="Animation" id="Animation_4mr8i"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -0.0990823, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.529477, 0.929816, -0.270861)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("../MeshInstance3D:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.647255, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../DirectionalLight3D:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-1.08682, -0.00344384, -1.77901)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Camera3D:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(1.85724, 2.81153, 2.8887)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("../PBR - Metallic Roughness Alpha-blend:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.643379, 0.790228, -0.245927)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("../PBR - Metallic Roughness Alpha-blend:rotation")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
 [sub_resource type="Animation" id="Animation_jy6ge"]
 resource_name = "new_animation"
 length = 9.0
@@ -111,93 +198,6 @@ tracks/6/keys = {
 "values": [Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(0.241833, 0, 0), Vector3(-2.72216, 0, 0), Vector3(-5.79275, 0, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_4mr8i"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, -0.0990823, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-0.529477, 0.929816, -0.270861)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("../MeshInstance3D:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0.647255, 0)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("../DirectionalLight3D:rotation")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-1.08682, -0.00344384, -1.77901)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Camera3D:position")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(1.85724, 2.81153, 2.8887)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("../PBR - Metallic Roughness Alpha-blend:position")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(-0.643379, 0.790228, -0.245927)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("../PBR - Metallic Roughness Alpha-blend:rotation")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector3(0, 0, 0)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_v166m"]
 _data = {
 "RESET": SubResource("Animation_4mr8i"),
@@ -239,7 +239,7 @@ noise = SubResource("FastNoiseLite_nn6ro")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.643379, 0.790228, -0.245927)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.209692, 0.977766, -0.00160242, -0.455252, -0.0961826, 0.885152, 0.865318, 0.186338, 0.465299, 0.375034, 0, 1.21836)
+transform = Transform3D(-0.209694, 0.977765, -0.00160242, -0.455253, -0.0961838, 0.885152, 0.865317, 0.18634, 0.4653, 0.375034, 0, 1.21836)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.797742, 0, 0.602999, 0, 1, 0, -0.602999, 0, 0.797742, -0.225598, 2.43717, 0.607554)
@@ -250,7 +250,7 @@ transform = Transform3D(0.797742, 0, 0.602999, 0, 1, 0, -0.602999, 0, 0.797742, 
 mesh = SubResource("QuadMesh_no6xa")
 
 [node name="cam pivot" type="Node3D" parent="."]
-transform = Transform3D(0.995095, 0, -0.0989203, 0, 1, 0, 0.0989203, 0, 0.995095, -0.529477, 0.929816, -0.270861)
+transform = Transform3D(0.995095, 0, -0.0989202, 0, 1, 0, 0.0989202, 0, 0.995095, -0.529477, 0.929816, -0.270861)
 
 [node name="Camera3D" type="Camera3D" parent="cam pivot"]
 transform = Transform3D(0.934218, -0.202797, 0.293446, 0, 0.822662, 0.568532, -0.356703, -0.531132, 0.768545, 1.85724, 2.81153, 2.8887)
