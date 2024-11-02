@@ -1,18 +1,19 @@
-[gd_scene load_steps=52 format=3 uid="uid://cg0lwr63age0v"]
+[gd_scene load_steps=53 format=3 uid="uid://cg0lwr63age0v"]
 
 [ext_resource type="QuadMesh" uid="uid://c72qv7tsxflig" path="res://gfx/summonCircleMesh.tres" id="1_7tuv2"]
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_l8nk1"]
-[ext_resource type="Texture2D" uid="uid://c18busabi562l" path="res://gfx/Evil Wizard 3/Sprites/Run.png" id="1_nbkfe"]
+[ext_resource type="Texture2D" uid="uid://c18busabi562l" path="res://gfx/Sprites/Evil Wizard 3/Sprites/Run.png" id="1_nbkfe"]
 [ext_resource type="Script" path="res://scripts/summonNode.gd" id="2_jlwc0"]
 [ext_resource type="PackedScene" uid="uid://cjv1ybdpcwsqh" path="res://prefabs/zombie.tscn" id="4_1pmvf"]
-[ext_resource type="Texture2D" uid="uid://b3emqeoocexpj" path="res://gfx/Wizard Pack/Run.png" id="4_mjgtt"]
-[ext_resource type="Texture2D" uid="uid://b7yoid2efejrk" path="res://gfx/EVil Wizard 2/Sprites/Run.png" id="5_kddxm"]
-[ext_resource type="Texture2D" uid="uid://dvsscef8tiv13" path="res://gfx/Evil Wizard/Sprites/Move.png" id="6_3bjep"]
-[ext_resource type="Texture2D" uid="uid://iqtijin7wi10" path="res://gfx/Hero Knight 2/Sprites/Run.png" id="7_f1ved"]
-[ext_resource type="Texture2D" uid="uid://vbeelnux8ub3" path="res://gfx/Medieval King Pack 2/Sprites/Run.png" id="8_leh5c"]
-[ext_resource type="Texture2D" uid="uid://ccckh33e3yabh" path="res://gfx/Medieval Warrior Pack 2/Sprites/Run.png" id="9_rml13"]
-[ext_resource type="Texture2D" uid="uid://bm4exy50t4o7q" path="res://gfx/Martial Hero 2/Sprites/Run.png" id="10_jps67"]
-[ext_resource type="Texture2D" uid="uid://csyp2suf4wl5o" path="res://gfx/Martial Hero/Sprites/Run.png" id="11_3317n"]
+[ext_resource type="Texture2D" uid="uid://b3emqeoocexpj" path="res://gfx/Sprites/Wizard Pack/Run.png" id="4_mjgtt"]
+[ext_resource type="Texture2D" uid="uid://b7yoid2efejrk" path="res://gfx/Sprites/EVil Wizard 2/Sprites/Run.png" id="5_kddxm"]
+[ext_resource type="Texture2D" uid="uid://dvsscef8tiv13" path="res://gfx/Sprites/Evil Wizard/Sprites/Move.png" id="6_3bjep"]
+[ext_resource type="Texture2D" uid="uid://iqtijin7wi10" path="res://gfx/Sprites/Hero Knight 2/Sprites/Run.png" id="7_f1ved"]
+[ext_resource type="Texture2D" uid="uid://vbeelnux8ub3" path="res://gfx/Sprites/Medieval King Pack 2/Sprites/Run.png" id="8_leh5c"]
+[ext_resource type="Texture2D" uid="uid://ccckh33e3yabh" path="res://gfx/Sprites/Medieval Warrior Pack 2/Sprites/Run.png" id="9_rml13"]
+[ext_resource type="Texture2D" uid="uid://bm4exy50t4o7q" path="res://gfx/Sprites/Martial Hero 2/Sprites/Run.png" id="10_jps67"]
+[ext_resource type="Texture2D" uid="uid://csyp2suf4wl5o" path="res://gfx/Sprites/Martial Hero/Sprites/Run.png" id="11_3317n"]
+[ext_resource type="PackedScene" uid="uid://gbc3ppf08ty" path="res://gfx/Goose/PBR - Metallic Roughness Alpha-blend.glb" id="14_ivteh"]
 
 [sub_resource type="GDScript" id="GDScript_am0de"]
 script/source = "extends Node3D
@@ -409,6 +410,9 @@ font_size = 128
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = ExtResource("1_l8nk1")
 DirRef = NodePath("../Cam Yaw")
+
+[node name="PBR - Metallic Roughness Alpha-blend" parent="Player" instance=ExtResource("14_ivteh")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.673783, 2.31507, 1.39498)
 
 [node name="zombie spawns" type="Node3D" parent="Player"]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0.286009, 0)

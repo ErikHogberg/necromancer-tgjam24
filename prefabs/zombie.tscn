@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://cjv1ybdpcwsqh"]
 
 [ext_resource type="Script" path="res://scripts/zombie.gd" id="1_u0lg6"]
-[ext_resource type="Texture2D" uid="uid://ba4xa50tcwpc5" path="res://gfx/Monsters_Creatures_Fantasy/Skeleton/Walk.png" id="2_iieh0"]
+[ext_resource type="Texture2D" uid="uid://ba4xa50tcwpc5" path="res://gfx/Sprites/Monsters_Creatures_Fantasy/Skeleton/Walk.png" id="2_iieh0"]
 
 [sub_resource type="Animation" id="Animation_rqm6h"]
 length = 0.001
