@@ -1,5 +1,5 @@
 extends Node3D
-class_name Zombie
+class_name Human
 
 enum State { Idle, Follow, Attacking, Chasing, Thinking}
 
@@ -9,7 +9,6 @@ enum State { Idle, Follow, Attacking, Chasing, Thinking}
 @export var SightDistance= 10.0
 @export var FollowDistance= 2.0
 
-@export var reused_projectile: Node3D
 
 const FOLLOW_SPEED = 10.0
 const a = 2
@@ -19,6 +18,7 @@ const followMinMax = Vector2(1,1000)
 const speedMinMax = Vector2(0.1,100)
 
 @export var currentState = State.Idle
+
 var target: Node3D
 var nextState = State.Idle
 
@@ -33,7 +33,6 @@ func revive():
 	Global.add_friendly(self)
 
 func _ready():
-	reused_projectile.visible = false
 	revive()
 
 func attack():
