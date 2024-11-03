@@ -12,7 +12,7 @@ var hp = 100.0
 var timer = 0.0
 
 func get_score()->float:
-	return friendlies.size()
+	return friendlies.size() -1
 
 func _ready():
 	var root = get_tree().root

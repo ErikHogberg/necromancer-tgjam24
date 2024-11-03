@@ -6,7 +6,7 @@ const GRAVITY = 0.980*5
 
 @export var MoveSpeed: float = 60
 @export var DirRef: Node3D
-@export var Player2: bool = false
+@export var Raycaster: RayCast3D
 
 
 var velocity: Vector3 = Vector3.ZERO
@@ -22,16 +22,15 @@ func is_on_floor() -> bool:
 	return global_position.y < 0.01
 
 func _ready() -> void:
-	if !Player2:
-		Global.player1 = self
-	else:
-		Global.player2 = self
+	Global.player1 = self
 		
 	Global.add_friendly(self)
 	resetPos = global_position
 
+var dead = false
 func die():
 	Global.remove_friendly(self)
+	dead = true
 
 func revive():
 	Global.add_friendly(self)
@@ -41,7 +40,7 @@ func shoot():
 	pass
 
 func _input(event: InputEvent) -> void:
-	
+	if dead: return
 	if event is InputEventMouseButton:
 		match event.button_index:
 			#MOUSE_BUTTON_RIGHT:
@@ -64,6 +63,7 @@ func _input(event: InputEvent) -> void:
 	
 
 func _process(delta: float) -> void:
+	if dead: return
 	
 	# Add the gravity.
 	if not is_on_floor():
