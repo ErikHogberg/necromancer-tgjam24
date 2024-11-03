@@ -1,8 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://cjv1ybdpcwsqh"]
+[gd_scene load_steps=19 format=3 uid="uid://cjv1ybdpcwsqh"]
 
 [ext_resource type="Script" path="res://scripts/zombie.gd" id="1_u0lg6"]
 [ext_resource type="Texture2D" uid="uid://ba4xa50tcwpc5" path="res://gfx/Sprites/Monsters_Creatures_Fantasy/Skeleton/Walk.png" id="2_iieh0"]
 [ext_resource type="PackedScene" uid="uid://cqik4wkn2po3l" path="res://gfx/Friendly Dead Models/Skull/Skull.gltf" id="3_37mb3"]
+[ext_resource type="Animation" uid="uid://ddwhpf34rn5au" path="res://Animations/Skull_bobb.res" id="4_gj3ed"]
+[ext_resource type="PackedScene" uid="uid://bfc3lmsujfkdy" path="res://gfx/Friendly Dead Models/Zombie/ASM - PBR Metallic Roughness.glb" id="5_8hebl"]
 
 [sub_resource type="Animation" id="Animation_rqm6h"]
 length = 0.001
@@ -58,6 +60,39 @@ _data = {
 "run4": SubResource("Animation_udv38")
 }
 
+[sub_resource type="Animation" id="Animation_8x7f8"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.0460191, 4.38991, -0.34761)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 3.14159, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_was0y"]
+_data = {
+"RESET": SubResource("Animation_8x7f8"),
+"Skull_bobb": ExtResource("4_gj3ed")
+}
+
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wwiuh"]
 gravity = Vector3(0, 0, 0)
 turbulence_influence_max = 0.543
@@ -73,6 +108,60 @@ emission_energy_multiplier = 4.06
 [sub_resource type="QuadMesh" id="QuadMesh_2h81f"]
 material = SubResource("StandardMaterial3D_1uamv")
 orientation = 1
+
+[sub_resource type="Animation" id="Animation_mafau"]
+resource_name = "Zombie_Walk animation"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, -0.261799), Vector3(0, 0, 0.261799), Vector3(0, 0, -0.261799)]
+}
+
+[sub_resource type="Animation" id="Animation_bql8y"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, -0.261799)]
+}
+
+[sub_resource type="Animation" id="Animation_o27ei"]
+resource_name = "Zombie_Hit_Animation"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.266667, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0.380943, -0.489186, -0.159491), Vector3(-0.232069, 0.315837, 0.0791102), Vector3(0.380943, -0.489186, -0.159491)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_u1qiy"]
+_data = {
+"RESET": SubResource("Animation_bql8y"),
+"Zombie_Hit_Animation": SubResource("Animation_o27ei"),
+"Zombie_Walk animation": SubResource("Animation_mafau")
+}
 
 [node name="Zombie" type="Node3D"]
 script = ExtResource("1_u0lg6")
@@ -97,7 +186,22 @@ speed_scale = 3.0
 [node name="Skull" parent="." instance=ExtResource("3_37mb3")]
 transform = Transform3D(-1, 0, 1.50996e-07, 0, 1, 0, -1.50996e-07, 0, -1, 0.0460191, 4.38991, -0.34761)
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Skull"]
+libraries = {
+"": SubResource("AnimationLibrary_was0y")
+}
+
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.99514, 0)
 process_material = SubResource("ParticleProcessMaterial_wwiuh")
 draw_pass_1 = SubResource("QuadMesh_2h81f")
+
+[node name="Node3D" type="Node3D" parent="."]
+
+[node name="ASM - PBR Metallic Roughness" parent="Node3D" instance=ExtResource("5_8hebl")]
+transform = Transform3D(1.93185, 0.517638, 0, -0.517638, 1.93185, 0, 0, 0, 2, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Node3D/ASM - PBR Metallic Roughness"]
+libraries = {
+"": SubResource("AnimationLibrary_u1qiy")
+}
