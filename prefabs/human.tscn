@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://6jrn4phdn1eq"]
+
+[ext_resource type="Script" path="res://scripts/human.gd" id="1_l0dcy"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ts5r1"]
+shading_mode = 2
+diffuse_mode = 3
+specular_mode = 2
+albedo_color = Color(0.721283, 0.414295, 0.397992, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_putj3"]
+material = SubResource("StandardMaterial3D_ts5r1")
+size = Vector3(4, 7, 2)
+
+[node name="Human" type="Node3D"]
+script = ExtResource("1_l0dcy")
+MeleeDistance = 5.0
+SightDistance = 33.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.41957, 0)
+mesh = SubResource("BoxMesh_putj3")

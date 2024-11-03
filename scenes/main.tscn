@@ -1,8 +1,8 @@
-[gd_scene load_steps=37 format=3 uid="uid://cg0lwr63age0v"]
+[gd_scene load_steps=40 format=3 uid="uid://cg0lwr63age0v"]
 
 [ext_resource type="PackedScene" uid="uid://cspawo2hkl2fg" path="res://prefabs/player.tscn" id="1_mnyua"]
+[ext_resource type="PackedScene" uid="uid://6jrn4phdn1eq" path="res://prefabs/human.tscn" id="3_06uuv"]
 [ext_resource type="PackedScene" uid="uid://cjv1ybdpcwsqh" path="res://prefabs/zombie.tscn" id="4_1pmvf"]
-[ext_resource type="Script" path="res://scripts/human.gd" id="8_550xb"]
 
 [sub_resource type="GDScript" id="GDScript_am0de"]
 script/source = "extends Node3D
@@ -185,15 +185,30 @@ func _process(delta: float) -> void:
 	
 "
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ts5r1"]
-shading_mode = 2
-diffuse_mode = 3
-specular_mode = 2
-albedo_color = Color(0.721283, 0.414295, 0.397992, 1)
+[sub_resource type="GDScript" id="GDScript_5dipt"]
+script/source = "extends Control
 
-[sub_resource type="BoxMesh" id="BoxMesh_putj3"]
-material = SubResource("StandardMaterial3D_ts5r1")
-size = Vector3(4, 7, 2)
+@export var mouseArrow: Control
+@export var aoeArrow: Control
+
+@export var mousePos1: float
+@export var mousePos2: float
+@export var aoePos1: float
+@export var aoePos2: float
+
+
+func _on_raise_pressed() -> void:
+	aoeArrow.position.x = aoePos1
+
+func _on_splode_pressed() -> void:
+	mouseArrow.position.x = mousePos1
+
+func _on_merge_pressed() -> void:
+	mouseArrow.position.x = mousePos2
+
+func _on_consoom_pressed() -> void:
+	aoeArrow.position.x = aoePos2
+"
 
 [sub_resource type="InputEventKey" id="InputEventKey_s7ljn"]
 device = -1
@@ -282,12 +297,44 @@ func _ready() -> void:
 	parent = get_parent()
 
 func _process(delta: float) -> void:
+	if !Global.player1: return
 	#parent.rotation_degrees = move_toward(parent.rotation_degrees, 70, delta*20)
 	var px = Global.hp / 100 * initSize
 	scale.x = px
 	hpBuffer = move_toward(hpBuffer, px, delta*0.20)
 	followBar.scale.x = hpBuffer
+	if Global.hp <=0:
+		Global.player1.die()
 	
+"
+
+[sub_resource type="SystemFont" id="SystemFont_xbxwv"]
+font_names = PackedStringArray("Agency FB")
+
+[sub_resource type="LabelSettings" id="LabelSettings_axly8"]
+font = SubResource("SystemFont_xbxwv")
+font_size = 34
+shadow_size = 8
+shadow_color = Color(0, 0, 0, 0.756863)
+shadow_offset = Vector2(4, 4)
+
+[sub_resource type="GDScript" id="GDScript_k6wa0"]
+script/source = "extends Label
+
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	Global.timer += delta
+	text = \"Time:\\n\" + str(snapped(Global.timer,0.01))
+"
+
+[sub_resource type="GDScript" id="GDScript_8h1le"]
+script/source = "extends Label
+
+
+func _process(delta: float) -> void:
+	text = \"Score:\\n\" + str(Global.get_score())
 "
 
 [node name="World" type="Node3D"]
@@ -311,6 +358,7 @@ mesh = SubResource("QuadMesh_tn8qn")
 
 [node name="Label3D" type="Label3D" parent="BG/Tile"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.56046, 0)
+visible = false
 billboard = 1
 text = "1"
 font_size = 128
@@ -345,14 +393,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.3078, 0, -13.2464)
 [node name="Humans" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -67.2395, 0, -106.7)
 
-[node name="Human" type="Node3D" parent="Humans"]
-script = ExtResource("8_550xb")
-MeleeDistance = 5.0
-SightDistance = 33.0
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Humans/Human"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.41957, 0)
-mesh = SubResource("BoxMesh_putj3")
+[node name="Human" parent="Humans" instance=ExtResource("3_06uuv")]
 
 [node name="HUD Canvas" type="Control" parent="."]
 layout_mode = 3
@@ -362,7 +403,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Toolbar" type="Control" parent="HUD Canvas"]
+[node name="Toolbar" type="Control" parent="HUD Canvas" node_paths=PackedStringArray("mouseArrow", "aoeArrow")]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -371,6 +412,13 @@ anchor_bottom = 1.0
 offset_top = -143.0
 grow_horizontal = 2
 grow_vertical = 0
+script = SubResource("GDScript_5dipt")
+mouseArrow = NodePath("ColorRect2")
+aoeArrow = NodePath("ColorRect")
+mousePos1 = 505.0
+mousePos2 = 605.0
+aoePos1 = 400.0
+aoePos2 = 710.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HUD Canvas/Toolbar"]
 layout_mode = 1
@@ -416,6 +464,28 @@ shortcut = SubResource("Shortcut_am6fe")
 text = "consoom"
 icon = SubResource("NoiseTexture2D_hxibq")
 icon_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="HUD Canvas/Toolbar"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -170.0
+offset_top = -31.0
+offset_right = -130.0
+offset_bottom = 9.0
+grow_horizontal = 2
+
+[node name="ColorRect2" type="ColorRect" parent="HUD Canvas/Toolbar"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -73.0
+offset_top = -34.0
+offset_right = -33.0
+offset_bottom = 6.0
+grow_horizontal = 2
 
 [node name="ColorRect" type="ColorRect" parent="HUD Canvas"]
 layout_mode = 0
@@ -487,3 +557,45 @@ offset_right = 416.995
 offset_bottom = 93.9043
 rotation = -2.83895
 text = "Life Energy"
+
+[node name="Time" type="Label" parent="HUD Canvas"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -77.5
+offset_top = 81.0
+offset_right = 77.5
+offset_bottom = 182.0
+grow_horizontal = 2
+text = "Time:
+0"
+label_settings = SubResource("LabelSettings_axly8")
+horizontal_alignment = 1
+script = SubResource("GDScript_k6wa0")
+
+[node name="Score" type="Label" parent="HUD Canvas"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -178.0
+offset_top = 28.0
+offset_right = -23.0
+offset_bottom = 129.0
+grow_horizontal = 0
+text = "Score:
+0"
+label_settings = SubResource("LabelSettings_axly8")
+horizontal_alignment = 1
+script = SubResource("GDScript_8h1le")
+
+[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D" method="summon"]
+[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D2" method="summon"]
+[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D3" method="summon"]
+[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D4" method="summon"]
+[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D5" method="summon"]
+[connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/raise" to="HUD Canvas/Toolbar" method="_on_raise_pressed"]
+[connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/splode" to="HUD Canvas/Toolbar" method="_on_splode_pressed"]
+[connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/merge" to="HUD Canvas/Toolbar" method="_on_merge_pressed"]
+[connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/consoom" to="HUD Canvas/Toolbar" method="_on_consoom_pressed"]
