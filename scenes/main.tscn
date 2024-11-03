@@ -311,6 +311,7 @@ func _process(delta: float) -> void:
 
 [sub_resource type="SystemFont" id="SystemFont_xbxwv"]
 font_names = PackedStringArray("Agency FB")
+subpixel_positioning = 0
 
 [sub_resource type="LabelSettings" id="LabelSettings_axly8"]
 font = SubResource("SystemFont_xbxwv")
@@ -592,11 +593,6 @@ label_settings = SubResource("LabelSettings_axly8")
 horizontal_alignment = 1
 script = SubResource("GDScript_8h1le")
 
-[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D" method="summon"]
-[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D2" method="summon"]
-[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D3" method="summon"]
-[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D4" method="summon"]
-[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D5" method="summon"]
 [connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/raise" to="HUD Canvas/Toolbar" method="_on_raise_pressed"]
 [connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/splode" to="HUD Canvas/Toolbar" method="_on_splode_pressed"]
 [connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/merge" to="HUD Canvas/Toolbar" method="_on_merge_pressed"]

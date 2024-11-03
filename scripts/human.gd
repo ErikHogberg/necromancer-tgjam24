@@ -3,6 +3,8 @@ class_name Human
 
 enum State { Idle, Attacking, Chasing, Thinking}
 
+@export var TombstonePrefab: PackedScene
+
 @export var ThinkTime= .1
 @export var SwingTime= 1.0
 @export var MeleeDistance= 1.0
@@ -27,10 +29,14 @@ var thinkingTimer = -1.0
 
 
 func die():
-	Global.remove_friendly(self)
-
+	Global.remove_hostile(self)
+	var a = TombstonePrefab.instantiate() as Node3D
+	get_node("/root/World").add_child(a)
+	a.global_position = global_position
+	queue_free()
+	
 func revive():
-	Global.add_friendly(self)
+	Global.add_hostile(self)
 
 func _ready():
 	revive()

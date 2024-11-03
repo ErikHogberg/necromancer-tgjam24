@@ -17,6 +17,8 @@ var wasLeft = false
 var summonMode=true
 var mergeMode=true
 
+var queueSummon = false
+
 signal on_move(pos: Vector2)
 signal on_flip(left: bool)
 signal show_summon_circle(on: bool)
@@ -34,6 +36,7 @@ func _ready() -> void:
 func die():
 	Global.remove_friendly(self)
 	dead = true
+	visible = false
 
 func revive():
 	Global.add_friendly(self)
@@ -44,6 +47,7 @@ func shoot():
 	
 func do_summon():
 	if summonMode:
+		queueSummon = true
 		summon.emit()
 
 func _input(event: InputEvent) -> void:
@@ -109,7 +113,23 @@ func _process(delta: float) -> void:
 	if global_position.y < 0: global_position.y = 0
 	
 	on_move.emit(Vector2(global_position.x,global_position.z))
+
+func _physics_process(delta: float) -> void:
+	if !queueSummon: return
+	queueSummon = false
 	
+	var space_state = get_world_3d().direct_space_state
+	#var cam = $Camera3D
+	#var mousepos = get_viewport().get_mouse_position()
+
+	var origin = Raycaster.global_position
+	#var end = origin + cam.project_ray_normal(mousepos) * RAY_LENGTH
+	var end = origin + Vector3.DOWN*10
+	var query = PhysicsShapeQueryParameters3D.new()
+	query.shape
+	query.collide_with_areas = true
+
+	var result = space_state.intersect_ray(query)
 
 func equip_raise():
 	summonMode = true
