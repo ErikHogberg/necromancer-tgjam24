@@ -146,8 +146,9 @@ func _process(_delta: float) -> void:
 	pass
 "
 
-[node name="Player" type="Node3D"]
+[node name="Player" type="Node3D" node_paths=PackedStringArray("Raycaster")]
 script = ExtResource("1_w0jxk")
+Raycaster = NodePath("RayCast3D")
 
 [node name="Node3D" type="Node3D" parent="."]
 transform = Transform3D(-0.908792, -4.47035e-08, -0.417248, 0.156304, 0.927184, -0.340439, 0.386866, -0.374607, -0.842618, -1.74846e-07, 1.30179, 0.552577)
@@ -163,31 +164,7 @@ transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0.286009, 0)
 visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="zombie spawns"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -1.20845, 0, -0.0684231)
-mesh = ExtResource("3_kgem2")
-script = ExtResource("4_6lg0j")
-zombie_prefab = ExtResource("5_tmi74")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="zombie spawns"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.500936, 0, 1.09076)
-mesh = ExtResource("3_kgem2")
-script = ExtResource("4_6lg0j")
-zombie_prefab = ExtResource("5_tmi74")
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="zombie spawns"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.788902, 0, 0.857534)
-mesh = ExtResource("3_kgem2")
-script = ExtResource("4_6lg0j")
-zombie_prefab = ExtResource("5_tmi74")
-
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="zombie spawns"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 1.11729, 1.93715e-07, -0.490531)
-mesh = ExtResource("3_kgem2")
-script = ExtResource("4_6lg0j")
-zombie_prefab = ExtResource("5_tmi74")
-
-[node name="MeshInstance3D5" type="MeshInstance3D" parent="zombie spawns"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.158705, 3.7998e-07, -1.18584)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.0376752, -0.0108332, -0.0412901)
 mesh = ExtResource("3_kgem2")
 script = ExtResource("4_6lg0j")
 zombie_prefab = ExtResource("5_tmi74")
@@ -232,7 +209,3 @@ script = SubResource("GDScript_xv8qk")
 [connection signal="on_flip" from="." to="Sprite3D" method="set_flip_h"]
 [connection signal="show_summon_circle" from="." to="zombie spawns" method="set_visible"]
 [connection signal="summon" from="." to="zombie spawns/MeshInstance3D" method="summon"]
-[connection signal="summon" from="." to="zombie spawns/MeshInstance3D2" method="summon"]
-[connection signal="summon" from="." to="zombie spawns/MeshInstance3D3" method="summon"]
-[connection signal="summon" from="." to="zombie spawns/MeshInstance3D4" method="summon"]
-[connection signal="summon" from="." to="zombie spawns/MeshInstance3D5" method="summon"]

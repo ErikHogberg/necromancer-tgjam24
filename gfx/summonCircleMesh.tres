@@ -126,3 +126,4 @@ shader_parameter/ColorParameter = Color(0.737255, 0.698039, 1, 0.396078)
 
 [resource]
 material = SubResource("ShaderMaterial_brnka")
+size = Vector2(8, 8)

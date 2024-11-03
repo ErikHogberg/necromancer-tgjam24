@@ -300,6 +300,7 @@ func _process(delta: float) -> void:
 	if !Global.player1: return
 	#parent.rotation_degrees = move_toward(parent.rotation_degrees, 70, delta*20)
 	var px = Global.hp / 100 * initSize
+	if px <0: px = 0
 	scale.x = px
 	hpBuffer = move_toward(hpBuffer, px, delta*0.20)
 	followBar.scale.x = hpBuffer
@@ -325,8 +326,9 @@ script/source = "extends Label
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	Global.timer += delta
-	text = \"Time:\\n\" + str(snapped(Global.timer,0.01))
+	if !Global.player1.dead:
+		Global.timer += delta
+		text = \"Time:\\n\" + str(snapped(Global.timer,0.01))
 "
 
 [sub_resource type="GDScript" id="GDScript_8h1le"]

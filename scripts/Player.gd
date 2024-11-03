@@ -11,7 +11,11 @@ const GRAVITY = 0.980*5
 
 var velocity: Vector3 = Vector3.ZERO
 var resetPos: Vector3
+var dead = false
 var wasLeft = false
+
+var summonMode=true
+var mergeMode=true
 
 signal on_move(pos: Vector2)
 signal on_flip(left: bool)
@@ -27,7 +31,6 @@ func _ready() -> void:
 	Global.add_friendly(self)
 	resetPos = global_position
 
-var dead = false
 func die():
 	Global.remove_friendly(self)
 	dead = true
@@ -38,6 +41,10 @@ func revive():
 func shoot():
 	# project mouse pos on plane? select closest enemy in range and send homing projectile?
 	pass
+	
+func do_summon():
+	if summonMode:
+		summon.emit()
 
 func _input(event: InputEvent) -> void:
 	if dead: return
@@ -51,11 +58,12 @@ func _input(event: InputEvent) -> void:
 				if event.pressed:
 					shoot()
 					
+		
 	if event.is_action_pressed("summon"):
 		show_summon_circle.emit(true)
 	if event.is_action_released("summon"):
 		show_summon_circle.emit(false)
-		summon.emit()
+		do_summon()
 	if event.is_action_pressed("quit"):
 		get_tree().quit()
 	if event.is_action_pressed("reset player"):
@@ -104,10 +112,10 @@ func _process(delta: float) -> void:
 	
 
 func equip_raise():
-	pass
+	summonMode = true
 func equip_splode():
-	pass
+	mergeMode = false
 func equip_merge():
-	pass
+	mergeMode = true
 func equip_consoom():
-	pass
+	summonMode= false
