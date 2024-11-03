@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://enhi4u1otmwp"]
+[gd_scene load_steps=7 format=3 uid="uid://22eqere84d0x"]
 
 [ext_resource type="PackedScene" uid="uid://bi7ndpswari5u" path="res://gfx/Enviroment Assets/GraveDirt/ASM - PBR Metallic Roughness.gltf" id="1_piksw"]
 [ext_resource type="PackedScene" uid="uid://4gg05cf8337m" path="res://gfx/Enviroment Assets/Gravestone/GraveStone.glb" id="2_febav"]
