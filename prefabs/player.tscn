@@ -1,0 +1,238 @@
+[gd_scene load_steps=17 format=3 uid="uid://cspawo2hkl2fg"]
+
+[ext_resource type="Script" path="res://scripts/Player.gd" id="1_w0jxk"]
+[ext_resource type="PackedScene" uid="uid://gbc3ppf08ty" path="res://gfx/Goose/PBR - Metallic Roughness Alpha-blend.glb" id="2_r2a5q"]
+[ext_resource type="QuadMesh" uid="uid://c72qv7tsxflig" path="res://gfx/summonCircleMesh.tres" id="3_kgem2"]
+[ext_resource type="Script" path="res://scripts/summonNode.gd" id="4_6lg0j"]
+[ext_resource type="PackedScene" uid="uid://cjv1ybdpcwsqh" path="res://prefabs/zombie.tscn" id="5_tmi74"]
+[ext_resource type="Texture2D" uid="uid://c18busabi562l" path="res://gfx/Sprites/Evil Wizard 3/Sprites/Run.png" id="6_n1qg6"]
+[ext_resource type="PackedScene" uid="uid://22eqere84d0x" path="res://prefabs/tombstone.tscn" id="7_6i5vu"]
+
+[sub_resource type="GDScript" id="GDScript_wije0"]
+script/source = "extends Node3D
+
+@export var leftRot: Vector3
+@export var rightRot: Vector3
+
+func left():
+	rotation_degrees = leftRot
+	
+func right():
+	rotation_degrees = rightRot
+
+func turn(turning_left: bool):
+	if turning_left:
+		left()
+	else:
+		right()
+"
+
+[sub_resource type="Animation" id="Animation_t3tpp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_je5x1"]
+resource_name = "run"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.889),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0, 7]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3ukah"]
+_data = {
+"RESET": SubResource("Animation_t3tpp"),
+"run": SubResource("Animation_je5x1")
+}
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_at773"]
+gravity = Vector3(0, 0, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g27cc"]
+shading_mode = 2
+diffuse_mode = 3
+specular_mode = 2
+albedo_color = Color(0.376471, 1, 0.156863, 1)
+emission_enabled = true
+emission = Color(0.215686, 1, 0.262745, 1)
+emission_energy_multiplier = 5.04
+
+[sub_resource type="QuadMesh" id="QuadMesh_4us6d"]
+material = SubResource("StandardMaterial3D_g27cc")
+orientation = 1
+
+[sub_resource type="GDScript" id="GDScript_wn8fd"]
+script/source = "extends Node3D
+
+@export var TombstonePrefab: PackedScene
+@export var TombstoneParent: Node3D
+
+@export var Distance: float = 500
+@export var Buffer: float = 100
+
+@export var StoneCapacity: int = 100
+@export var MaxNewStones: int = 5
+
+var refPos: Vector3
+
+var stones: Array[Node3D] = []
+
+func stone_pos() -> Vector3:
+	var pos = to_global((Vector3.FORWARD*Distance).rotated(Vector3.UP, randf()*PI*2.0))
+	pos.y = 0
+	return pos
+
+func spawn_stone():
+	var newStone = TombstonePrefab.instantiate() as Node3D
+	TombstoneParent.add_child(newStone)
+	newStone.global_position = stone_pos()
+	stones.push_back(newStone)
+	print(\"new stone at \", newStone.global_position )
+
+func refresh_stones():
+	# idea: check dir from old refpos, only move stones in that dir
+	refPos = global_position
+	var sqr = Distance*Distance + Buffer*Buffer
+	
+	for stone in stones:
+		if stone.global_position.distance_squared_to(refPos) > sqr:
+			stone.global_position = stone_pos()
+	
+	var newCount = min(MaxNewStones,StoneCapacity - stones.size())
+	for i in newCount:
+		spawn_stone.call_deferred()
+	
+
+func _ready() -> void:
+	if !TombstoneParent: TombstoneParent = get_node(\"/root/World\")
+	refresh_stones()
+
+func _process(_delta: float) -> void:
+	if refPos.distance_squared_to(global_position) > Buffer*Buffer:
+		refresh_stones()
+"
+
+[sub_resource type="GDScript" id="GDScript_xv8qk"]
+script/source = "extends Node3D
+
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta: float) -> void:
+	pass
+"
+
+[node name="Player" type="Node3D"]
+script = ExtResource("1_w0jxk")
+
+[node name="Node3D" type="Node3D" parent="."]
+transform = Transform3D(-0.908792, -4.47035e-08, -0.417248, 0.156304, 0.927184, -0.340439, 0.386866, -0.374607, -0.842618, -1.74846e-07, 1.30179, 0.552577)
+script = SubResource("GDScript_wije0")
+leftRot = Vector3(-20, -25, 10)
+rightRot = Vector3(20, -155, 10)
+
+[node name="PBR - Metallic Roughness Alpha-blend" parent="Node3D" instance=ExtResource("2_r2a5q")]
+transform = Transform3D(-0.170834, 0.482077, -1.9335, 0, 1.9406, 0.483844, 1.99269, 0.0413285, -0.165759, -0.27955, 1.33054, -0.589949)
+
+[node name="zombie spawns" type="Node3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0.286009, 0)
+visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="zombie spawns"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -1.20845, 0, -0.0684231)
+mesh = ExtResource("3_kgem2")
+script = ExtResource("4_6lg0j")
+zombie_prefab = ExtResource("5_tmi74")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="zombie spawns"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.500936, 0, 1.09076)
+mesh = ExtResource("3_kgem2")
+script = ExtResource("4_6lg0j")
+zombie_prefab = ExtResource("5_tmi74")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="zombie spawns"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.788902, 0, 0.857534)
+mesh = ExtResource("3_kgem2")
+script = ExtResource("4_6lg0j")
+zombie_prefab = ExtResource("5_tmi74")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="zombie spawns"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 1.11729, 1.93715e-07, -0.490531)
+mesh = ExtResource("3_kgem2")
+script = ExtResource("4_6lg0j")
+zombie_prefab = ExtResource("5_tmi74")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="zombie spawns"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.158705, 3.7998e-07, -1.18584)
+mesh = ExtResource("3_kgem2")
+script = ExtResource("4_6lg0j")
+zombie_prefab = ExtResource("5_tmi74")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 2.85773, 0)
+visible = false
+cast_shadow = 0
+gi_mode = 0
+billboard = 2
+texture_filter = 0
+texture = ExtResource("6_n1qg6")
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite3D"]
+libraries = {
+"": SubResource("AnimationLibrary_3ukah")
+}
+autoplay = "run"
+speed_scale = 6.0
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.626271, 0)
+amount = 32
+process_material = SubResource("ParticleProcessMaterial_at773")
+draw_pass_1 = SubResource("QuadMesh_4us6d")
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.08782, 0)
+
+[node name="Tombstone Spawner" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+script = SubResource("GDScript_wn8fd")
+TombstonePrefab = ExtResource("7_6i5vu")
+Distance = 100.0
+Buffer = 50.0
+
+[node name="Human Spawner" type="Node3D" parent="."]
+script = SubResource("GDScript_xv8qk")
+
+[connection signal="on_flip" from="." to="Node3D" method="turn"]
+[connection signal="on_flip" from="." to="Sprite3D" method="set_flip_h"]
+[connection signal="show_summon_circle" from="." to="zombie spawns" method="set_visible"]
+[connection signal="summon" from="." to="zombie spawns/MeshInstance3D" method="summon"]
+[connection signal="summon" from="." to="zombie spawns/MeshInstance3D2" method="summon"]
+[connection signal="summon" from="." to="zombie spawns/MeshInstance3D3" method="summon"]
+[connection signal="summon" from="." to="zombie spawns/MeshInstance3D4" method="summon"]
+[connection signal="summon" from="." to="zombie spawns/MeshInstance3D5" method="summon"]

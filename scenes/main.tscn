@@ -1,14 +1,8 @@
-[gd_scene load_steps=51 format=3 uid="uid://cg0lwr63age0v"]
+[gd_scene load_steps=37 format=3 uid="uid://cg0lwr63age0v"]
 
-[ext_resource type="QuadMesh" uid="uid://c72qv7tsxflig" path="res://gfx/summonCircleMesh.tres" id="1_7tuv2"]
-[ext_resource type="Script" path="res://scripts/Player.gd" id="1_l8nk1"]
-[ext_resource type="Texture2D" uid="uid://c18busabi562l" path="res://gfx/Sprites/Evil Wizard 3/Sprites/Run.png" id="1_nbkfe"]
-[ext_resource type="Script" path="res://scripts/summonNode.gd" id="2_jlwc0"]
+[ext_resource type="PackedScene" uid="uid://cspawo2hkl2fg" path="res://prefabs/player.tscn" id="1_mnyua"]
 [ext_resource type="PackedScene" uid="uid://cjv1ybdpcwsqh" path="res://prefabs/zombie.tscn" id="4_1pmvf"]
-[ext_resource type="PackedScene" uid="uid://22eqere84d0x" path="res://prefabs/tombstone.tscn" id="7_7h5fj"]
 [ext_resource type="Script" path="res://scripts/human.gd" id="8_550xb"]
-[ext_resource type="PackedScene" uid="uid://docl0xu754qjo" path="res://scenes/characters.tscn" id="9_v624p"]
-[ext_resource type="PackedScene" uid="uid://gbc3ppf08ty" path="res://gfx/Goose/PBR - Metallic Roughness Alpha-blend.glb" id="14_ivteh"]
 
 [sub_resource type="GDScript" id="GDScript_am0de"]
 script/source = "extends Node3D
@@ -109,128 +103,6 @@ albedo_texture = SubResource("NoiseTexture2D_5csxy")
 [sub_resource type="QuadMesh" id="QuadMesh_tn8qn"]
 material = SubResource("StandardMaterial3D_3pkho")
 size = Vector2(100, 100)
-
-[sub_resource type="GDScript" id="GDScript_wije0"]
-script/source = "extends Node3D
-
-@export var leftRot: Vector3
-@export var rightRot: Vector3
-
-func left():
-	rotation_degrees = leftRot
-	
-func right():
-	rotation_degrees = rightRot
-
-func turn(turning_left: bool):
-	if turning_left:
-		left()
-	else:
-		right()
-"
-
-[sub_resource type="Animation" id="Animation_t3tpp"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
-}
-
-[sub_resource type="Animation" id="Animation_je5x1"]
-resource_name = "run"
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = false
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.889),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0, 7]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_3ukah"]
-_data = {
-"RESET": SubResource("Animation_t3tpp"),
-"run": SubResource("Animation_je5x1")
-}
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_at773"]
-gravity = Vector3(0, 0, 0)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g27cc"]
-shading_mode = 2
-diffuse_mode = 3
-specular_mode = 2
-albedo_color = Color(0.376471, 1, 0.156863, 1)
-emission_enabled = true
-emission = Color(0.215686, 1, 0.262745, 1)
-emission_energy_multiplier = 5.04
-
-[sub_resource type="QuadMesh" id="QuadMesh_4us6d"]
-material = SubResource("StandardMaterial3D_g27cc")
-orientation = 1
-
-[sub_resource type="GDScript" id="GDScript_wn8fd"]
-script/source = "extends Node3D
-
-@export var TombstonePrefab: PackedScene
-@export var TombstoneParent: Node3D
-
-@export var Distance: float = 500
-@export var Buffer: float = 100
-
-@export var StoneCapacity: int = 100
-@export var MaxNewStones: int = 5
-
-var refPos: Vector3
-
-var stones: Array[Node3D] = []
-
-func stone_pos() -> Vector3:
-	var pos = to_global((Vector3.FORWARD*Distance).rotated(Vector3.UP, randf()*PI*2.0))
-	pos.y = 0
-	return pos
-
-func spawn_stone():
-	var newStone = TombstonePrefab.instantiate() as Node3D
-	TombstoneParent.add_child(newStone)
-	newStone.global_position = stone_pos()
-	stones.push_back(newStone)
-	print(\"new stone at \", newStone.global_position )
-
-func refresh_stones():
-	# idea: check dir from old refpos, only move stones in that dir
-	refPos = global_position
-	var sqr = Distance*Distance + Buffer*Buffer
-	
-	for stone in stones:
-		if stone.global_position.distance_squared_to(refPos) > sqr:
-			stone.global_position = stone_pos()
-	
-	var newCount = min(MaxNewStones,StoneCapacity - stones.size())
-	for i in newCount:
-		spawn_stone.call_deferred()
-	
-
-func _ready() -> void:
-	refresh_stones()
-
-func _process(_delta: float) -> void:
-	if refPos.distance_squared_to(global_position) > Buffer*Buffer:
-		refresh_stones()
-"
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bpj4x"]
 sky_curve = 0.47075
@@ -443,87 +315,8 @@ billboard = 1
 text = "1"
 font_size = 128
 
-[node name="Player" type="Node3D" parent="." node_paths=PackedStringArray("DirRef")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-script = ExtResource("1_l8nk1")
+[node name="Player" parent="." node_paths=PackedStringArray("DirRef") instance=ExtResource("1_mnyua")]
 DirRef = NodePath("../Cam Yaw")
-
-[node name="Node3D" type="Node3D" parent="Player"]
-transform = Transform3D(-0.908792, -4.47035e-08, -0.417248, 0.156304, 0.927184, -0.340439, 0.386866, -0.374607, -0.842618, -1.74846e-07, 1.30179, 0.552577)
-script = SubResource("GDScript_wije0")
-leftRot = Vector3(-20, -25, 10)
-rightRot = Vector3(20, -155, 10)
-
-[node name="PBR - Metallic Roughness Alpha-blend" parent="Player/Node3D" instance=ExtResource("14_ivteh")]
-transform = Transform3D(-0.170834, 0.482077, -1.9335, 0, 1.9406, 0.483844, 1.99269, 0.0413285, -0.165759, -0.27955, 1.33054, -0.589949)
-
-[node name="zombie spawns" type="Node3D" parent="Player"]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0.286009, 0)
-visible = false
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Player/zombie spawns"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -1.20845, 0, -0.0684231)
-mesh = ExtResource("1_7tuv2")
-script = ExtResource("2_jlwc0")
-zombie_prefab = ExtResource("4_1pmvf")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Player/zombie spawns"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.500936, 0, 1.09076)
-mesh = ExtResource("1_7tuv2")
-script = ExtResource("2_jlwc0")
-zombie_prefab = ExtResource("4_1pmvf")
-
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Player/zombie spawns"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.788902, 0, 0.857534)
-mesh = ExtResource("1_7tuv2")
-script = ExtResource("2_jlwc0")
-zombie_prefab = ExtResource("4_1pmvf")
-
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="Player/zombie spawns"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 1.11729, 1.93715e-07, -0.490531)
-mesh = ExtResource("1_7tuv2")
-script = ExtResource("2_jlwc0")
-zombie_prefab = ExtResource("4_1pmvf")
-
-[node name="MeshInstance3D5" type="MeshInstance3D" parent="Player/zombie spawns"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.158705, 3.7998e-07, -1.18584)
-mesh = ExtResource("1_7tuv2")
-script = ExtResource("2_jlwc0")
-zombie_prefab = ExtResource("4_1pmvf")
-
-[node name="Sprite3D" type="Sprite3D" parent="Player"]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 2.85773, 0)
-visible = false
-cast_shadow = 0
-gi_mode = 0
-billboard = 2
-texture_filter = 0
-texture = ExtResource("1_nbkfe")
-hframes = 8
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/Sprite3D"]
-libraries = {
-"": SubResource("AnimationLibrary_3ukah")
-}
-autoplay = "run"
-speed_scale = 6.0
-
-[node name="GPUParticles3D" type="GPUParticles3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.626271, 0)
-amount = 32
-process_material = SubResource("ParticleProcessMaterial_at773")
-draw_pass_1 = SubResource("QuadMesh_4us6d")
-
-[node name="RayCast3D" type="RayCast3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.08782, 0)
-
-[node name="Tombstone Spawner" type="Node3D" parent="Player" node_paths=PackedStringArray("TombstoneParent")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
-script = SubResource("GDScript_wn8fd")
-TombstonePrefab = ExtResource("7_7h5fj")
-TombstoneParent = NodePath("../..")
-Distance = 100.0
-Buffer = 50.0
 
 [node name="Cam Yaw" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.06615, 10.4074, 12.4275)
@@ -560,9 +353,6 @@ SightDistance = 33.0
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Humans/Human"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.41957, 0)
 mesh = SubResource("BoxMesh_putj3")
-
-[node name="Characters" parent="Humans" instance=ExtResource("9_v624p")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.9787, 0, 99.0281)
 
 [node name="HUD Canvas" type="Control" parent="."]
 layout_mode = 3
@@ -697,17 +487,3 @@ offset_right = 416.995
 offset_bottom = 93.9043
 rotation = -2.83895
 text = "Life Energy"
-
-[connection signal="on_flip" from="Player" to="Player/Node3D" method="turn"]
-[connection signal="on_flip" from="Player" to="Player/Sprite3D" method="set_flip_h"]
-[connection signal="on_move" from="Player" to="BG" method="update_pos"]
-[connection signal="show_summon_circle" from="Player" to="Player/zombie spawns" method="set_visible"]
-[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D" method="summon"]
-[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D2" method="summon"]
-[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D3" method="summon"]
-[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D4" method="summon"]
-[connection signal="summon" from="Player" to="Player/zombie spawns/MeshInstance3D5" method="summon"]
-[connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/raise" to="Player" method="equip_raise"]
-[connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/splode" to="Player" method="equip_splode"]
-[connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/merge" to="Player" method="equip_merge"]
-[connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/consoom" to="Player" method="equip_consoom"]

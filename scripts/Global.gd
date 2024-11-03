@@ -9,6 +9,10 @@ var friendlies: Array[Node3D] = []
 var hostiles: Array[Node3D] = []
 
 var hp = 100.0
+var timer = 0.0
+
+func get_score()->float:
+	return friendlies.size()
 
 func _ready():
 	var root = get_tree().root
