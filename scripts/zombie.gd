@@ -37,6 +37,13 @@ func _ready():
 		reused_projectile.visible = false
 	revive()
 
+func look_for_human():
+	var human =Global.get_closest_hostile(global_position)
+	if !human: return
+	if human.global_position.distance_squared_to(global_position) < SightDistance*SightDistance:
+		target = human
+		enter_state(State.Chasing)
+
 func attack():
 	if !target:
 		enter_state(State.Idle)
@@ -44,11 +51,16 @@ func attack():
 	
 	if target.global_position.distance_squared_to(global_position) > MeleeDistance*MeleeDistance:
 		enter_state(State.Chasing)
+	else:
+		target.die()
+		enter_state(State.Idle)
 
-func chase():
+func chase(delta):
 	if !target:
 		enter_state(State.Idle)
 		return
+		
+	global_position = global_position.move_toward(target.global_position, delta *20)
 		
 	if target.global_position.distance_squared_to(global_position) < MeleeDistance*MeleeDistance:
 		enter_state(State.Attacking)
@@ -71,6 +83,8 @@ func follow(delta: float):
 		var speed = distLerp* (speedMinMax.y-speedMinMax.x) + speedMinMax.x
 		global_position = global_position.move_toward(target.global_position, delta*speed*FOLLOW_SPEED)
 		global_position.y = 0
+	else:
+		look_for_human()
 	
 	var dirAngle =oldPos.signed_angle_to(global_position, Vector3.DOWN)
 	
@@ -106,9 +120,6 @@ func _process(delta: float) -> void:
 			if Global.player1.global_position.distance_squared_to(global_position) < SightDistance*SightDistance:
 				target = Global.player1
 				enter_state(State.Follow)
-			elif Global.player2 and Global.player2.global_position.distance_squared_to(global_position) < SightDistance*SightDistance:
-				target = Global.player2
-				enter_state(State.Follow)
 		State.Attacking:
 			attackTimer -= delta
 			if attackTimer < 0:
@@ -116,7 +127,7 @@ func _process(delta: float) -> void:
 		State.Follow:
 			follow(delta)
 		State.Chasing:
-			chase()
+			chase(delta)
 		State.Thinking:
 			thinkingTimer -= delta
 			if thinkingTimer < 0:

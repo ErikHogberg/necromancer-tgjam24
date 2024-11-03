@@ -227,6 +227,7 @@ root_node = NodePath("../..")
 libraries = {
 "": SubResource("AnimationLibrary_5nwqq")
 }
+autoplay = "Silly_Goose_Walking"
 
 [node name="zombie spawns" type="Node3D" parent="."]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0.286009, 0)

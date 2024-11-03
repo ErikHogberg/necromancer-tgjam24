@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://6jrn4phdn1eq"]
+[gd_scene load_steps=11 format=3 uid="uid://6jrn4phdn1eq"]
 
 [ext_resource type="Script" path="res://scripts/human.gd" id="1_l0dcy"]
+[ext_resource type="PackedScene" uid="uid://22eqere84d0x" path="res://prefabs/tombstone.tscn" id="2_q7uj2"]
 [ext_resource type="PackedScene" uid="uid://ccxnqatyu2i2j" path="res://gfx/Enemies/ASM - PBR Metallic Roughness.glb" id="2_vpy8x"]
-[ext_resource type="Animation" uid="uid://37rcakqsjwel" path="res://Animations/Walking_Knight.res" id="3_qo1hk"]
-[ext_resource type="Animation" uid="uid://y5yyhaquy8bk" path="res://Animations/Attack_Knight.res" id="4_hyxx6"]
-[ext_resource type="Animation" uid="uid://bg3xp1tgh1yk" path="res://Animations/Death_Knight.res" id="5_il63v"]
+[ext_resource type="Animation" path="res://Animations/Walking_Knight.res" id="3_qo1hk"]
+[ext_resource type="Animation" path="res://Animations/Attack_Knight.res" id="4_hyxx6"]
+[ext_resource type="Animation" path="res://Animations/Death_Knight.res" id="5_il63v"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ts5r1"]
 shading_mode = 2
@@ -53,6 +54,7 @@ _data = {
 
 [node name="Human" type="Node3D"]
 script = ExtResource("1_l0dcy")
+TombstonePrefab = ExtResource("2_q7uj2")
 MeleeDistance = 5.0
 SightDistance = 33.0
 
@@ -65,9 +67,10 @@ mesh = SubResource("BoxMesh_putj3")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.41957, 0)
 
 [node name="ASM - PBR Metallic Roughness" parent="Node3D" instance=ExtResource("2_vpy8x")]
-transform = Transform3D(1.93003, -0.524378, 0, 0.524378, 1.93003, 0, 0, 0, 2, 0, -4.61812, 0)
+transform = Transform3D(1.93003, -0.524377, 0, 0.524377, 1.93003, 0, 0, 0, 2, 0, -4.61812, 0)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Node3D/ASM - PBR Metallic Roughness"]
 libraries = {
 "": SubResource("AnimationLibrary_hemt1")
 }
+autoplay = "Walking_Knight"
