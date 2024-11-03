@@ -47,7 +47,7 @@ func revive():
 
 func shoot():
 	# project mouse pos on plane? select closest enemy in range and send homing projectile?
-	pass
+	queueClick = true
 	
 func do_summon():
 	if summonMode:
@@ -129,15 +129,24 @@ func _physics_process(delta: float) -> void:
 	queueClick = false
 	
 	var space_state = get_world_3d().direct_space_state
-	var cam = $Camera3D
+	var cam = get_viewport().get_camera_3d()
 	var mousepos = get_viewport().get_mouse_position()
 
 	var origin = cam.project_ray_origin(mousepos)
 	var end = origin + cam.project_ray_normal(mousepos) * 100
 	var query = PhysicsRayQueryParameters3D.create(origin, end)
-	query.collide_with_areas = true
+	query.collide_with_areas = false
 
 	var result = space_state.intersect_ray(query)
+	if result:
+		var stpos: Vector3 = result.collider.global_position
+		var human = Global.get_closest_hostile(stpos)
+		#print(result.collider.name)
+		if human and human.global_position.distance_to(stpos) < 10:
+			human.die()
+		Global.remove_stone(result.collider)
+		result.collider.queue_free()
+	
 	
 func equip_raise():
 	summonMode = true
