@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://22eqere84d0x"]
+[gd_scene load_steps=7 format=3 uid="uid://enhi4u1otmwp"]
 
 [ext_resource type="PackedScene" uid="uid://bi7ndpswari5u" path="res://gfx/Enviroment Assets/GraveDirt/ASM - PBR Metallic Roughness.gltf" id="1_piksw"]
+[ext_resource type="PackedScene" uid="uid://4gg05cf8337m" path="res://gfx/Enviroment Assets/Gravestone/GraveStone.glb" id="2_febav"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_utd72"]
 radius = 2.43233
@@ -34,3 +35,6 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 lifetime = 4.0
 process_material = SubResource("ParticleProcessMaterial_i5woj")
 draw_pass_1 = SubResource("QuadMesh_onm0o")
+
+[node name="GraveStone" parent="." instance=ExtResource("2_febav")]
+transform = Transform3D(-2.12816, 0, 0.0858586, -0.0292741, 1.70335, -0.493741, -0.0998832, -0.499224, -1.68464, 0, -0.16318, -1.89936)
