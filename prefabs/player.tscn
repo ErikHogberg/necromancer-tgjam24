@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://c16038apbdhu4"]
+[gd_scene load_steps=22 format=3 uid="uid://c16038apbdhu4"]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_w0jxk"]
 [ext_resource type="PackedScene" uid="uid://gbc3ppf08ty" path="res://gfx/Goose/PBR - Metallic Roughness Alpha-blend.glb" id="2_r2a5q"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://clahm473ldisc" path="res://gfx/Goose/Goose Knife/ASM - PBR Metallic Roughness.glb" id="3_tet5k"]
 [ext_resource type="Script" path="res://scripts/summonNode.gd" id="4_6lg0j"]
 [ext_resource type="Animation" uid="uid://1ia1b0tyqan4" path="res://Animations/Silly_Goose_walking_1.res" id="4_o63f5"]
+[ext_resource type="Animation" uid="uid://dr6duilwdstd5" path="res://Animations/Player_Death_Animation.res" id="5_fewyc"]
 [ext_resource type="PackedScene" uid="uid://cjv1ybdpcwsqh" path="res://prefabs/zombie.tscn" id="5_tmi74"]
 [ext_resource type="Texture2D" uid="uid://c18busabi562l" path="res://gfx/Sprites/Evil Wizard 3/Sprites/Run.png" id="6_n1qg6"]
 [ext_resource type="PackedScene" path="res://prefabs/tombstone.tscn" id="7_6i5vu"]
@@ -43,9 +44,22 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector3(0.015708, -2.06472, 0.261799)]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PBR - Metallic Roughness Alpha-blend:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.27955, 1.33054, -0.589949)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_5nwqq"]
 _data = {
+"Player_Death_Animation": ExtResource("5_fewyc"),
 "RESET": SubResource("Animation_1hkdl"),
 "Silly_Goose_Walking": ExtResource("4_o63f5")
 }
@@ -179,7 +193,7 @@ leftRot = Vector3(-20, -25, 10)
 rightRot = Vector3(20, -155, 10)
 
 [node name="PBR - Metallic Roughness Alpha-blend" parent="Node3D" instance=ExtResource("2_r2a5q")]
-transform = Transform3D(-0.923027, 0.21869, -1.76074, 0.517574, 1.93162, -0.0314147, 1.6971, -0.470157, -0.94806, -0.27955, 1.33054, -0.589949)
+transform = Transform3D(-0.923021, 0.218687, -1.76074, 0.517574, 1.93162, -0.0314147, 1.6971, -0.470156, -0.948052, -0.27955, 1.33054, -0.589949)
 
 [node name="ASM - PBR Metallic Roughness" parent="Node3D/PBR - Metallic Roughness Alpha-blend" instance=ExtResource("3_tet5k")]
 transform = Transform3D(-0.0344168, -0.486586, 0.109771, -0.216467, -0.0845616, -0.442707, 0.449397, -0.0779969, -0.204839, 0.598168, 1.50219, 1.11345)
