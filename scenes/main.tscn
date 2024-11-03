@@ -350,6 +350,8 @@ tilingDistance = 1000.0
 
 [node name="Tile" type="StaticBody3D" parent="BG"]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BG/Tile"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
@@ -593,6 +595,7 @@ label_settings = SubResource("LabelSettings_axly8")
 horizontal_alignment = 1
 script = SubResource("GDScript_8h1le")
 
+[connection signal="on_move" from="Player" to="BG" method="update_pos"]
 [connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/raise" to="HUD Canvas/Toolbar" method="_on_raise_pressed"]
 [connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/splode" to="HUD Canvas/Toolbar" method="_on_splode_pressed"]
 [connection signal="pressed" from="HUD Canvas/Toolbar/HBoxContainer/merge" to="HUD Canvas/Toolbar" method="_on_merge_pressed"]

@@ -7,6 +7,7 @@ var player1: Node3D
 var player2: Node3D
 var friendlies: Array[Node3D] = []
 var hostiles: Array[Node3D] = []
+var stones: Array[Node3D] = []
 
 var hp = 100.0
 var timer = 0.0
@@ -58,6 +59,11 @@ func remove_hostile(hostile: Node3D):
 	for i in hostiles.size():
 		if hostiles[i] == hostile:
 			hostiles.remove_at(i)
+			return
+func remove_stone(hostile: Node3D):
+	for i in stones.size():
+		if hostiles[i] == hostile:
+			stones.remove_at(i)
 			return
 
 func take_dmg():

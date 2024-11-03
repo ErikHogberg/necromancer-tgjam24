@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cspawo2hkl2fg"]
+[gd_scene load_steps=24 format=3 uid="uid://cspawo2hkl2fg"]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_w0jxk"]
 [ext_resource type="PackedScene" uid="uid://gbc3ppf08ty" path="res://gfx/Goose/PBR - Metallic Roughness Alpha-blend.glb" id="2_r2a5q"]
@@ -132,7 +132,6 @@ script/source = "extends Node3D
 
 var refPos: Vector3
 
-var stones: Array[Node3D] = []
 
 func stone_pos() -> Vector3:
 	var pos = to_global((Vector3.FORWARD*Distance).rotated(Vector3.UP, randf()*PI*2.0))
@@ -143,7 +142,7 @@ func spawn_stone():
 	var newStone = TombstonePrefab.instantiate() as Node3D
 	TombstoneParent.add_child(newStone)
 	newStone.global_position = stone_pos()
-	stones.push_back(newStone)
+	Global.stones.push_back(newStone)
 	print(\"new stone at \", newStone.global_position )
 
 func refresh_stones():
@@ -151,11 +150,12 @@ func refresh_stones():
 	refPos = global_position
 	var sqr = Distance*Distance + Buffer*Buffer
 	
-	for stone in stones:
+	for stone in Global.stones:
+		if !is_instance_valid(stone): continue
 		if stone.global_position.distance_squared_to(refPos) > sqr:
 			stone.global_position = stone_pos()
 	
-	var newCount = min(MaxNewStones,StoneCapacity - stones.size())
+	var newCount = min(MaxNewStones,StoneCapacity - Global.stones.size())
 	for i in newCount:
 		spawn_stone.call_deferred()
 	
@@ -202,8 +202,13 @@ func _process(_delta: float) -> void:
 		human.global_position = new_pos()
 "
 
-[node name="Player" type="Node3D"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_7v6vl"]
+radius = 30.0
+
+[node name="Player" type="Node3D" node_paths=PackedStringArray("SummonArea")]
 script = ExtResource("1_w0jxk")
+SummonArea = NodePath("Area3D")
+zombiePrefab = ExtResource("5_tmi74")
 
 [node name="Node3D" type="Node3D" parent="."]
 transform = Transform3D(-0.908792, -4.47035e-08, -0.417248, 0.156304, 0.927184, -0.340439, 0.386866, -0.374607, -0.842618, -1.74846e-07, 1.30179, 0.552577)
@@ -267,7 +272,11 @@ Buffer = 50.0
 script = SubResource("GDScript_xv8qk")
 HumanPrefab = ExtResource("8_qn0l1")
 
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_7v6vl")
+
 [connection signal="on_flip" from="." to="Node3D" method="turn"]
 [connection signal="on_flip" from="." to="Sprite3D" method="set_flip_h"]
 [connection signal="show_summon_circle" from="." to="zombie spawns" method="set_visible"]
-[connection signal="summon" from="." to="zombie spawns/MeshInstance3D" method="summon"]

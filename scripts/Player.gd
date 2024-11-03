@@ -6,7 +6,10 @@ const GRAVITY = 0.980*5
 
 @export var MoveSpeed: float = 60
 @export var DirRef: Node3D
-@export var Raycaster: RayCast3D
+@export var SummonArea: Area3D
+
+@export var zombiePrefab: PackedScene
+var zombieParent: Node3D
 
 
 var velocity: Vector3 = Vector3.ZERO
@@ -17,7 +20,7 @@ var wasLeft = false
 var summonMode=true
 var mergeMode=true
 
-var queueSummon = false
+var queueClick = false
 
 signal on_move(pos: Vector2)
 signal on_flip(left: bool)
@@ -32,6 +35,7 @@ func _ready() -> void:
 		
 	Global.add_friendly(self)
 	resetPos = global_position
+	zombieParent = get_node("/root/World")
 
 func die():
 	Global.remove_friendly(self)
@@ -47,7 +51,13 @@ func shoot():
 	
 func do_summon():
 	if summonMode:
-		queueSummon = true
+		var stones = SummonArea.get_overlapping_bodies()
+		for stone in stones:
+			var zombie = zombiePrefab.instantiate() as Node3D
+			zombieParent.add_child(zombie)
+			zombie.global_position = stone.global_position
+			Global.remove_stone(stone)
+			stone.queue_free()
 		summon.emit()
 
 func _input(event: InputEvent) -> void:
@@ -115,22 +125,20 @@ func _process(delta: float) -> void:
 	on_move.emit(Vector2(global_position.x,global_position.z))
 
 func _physics_process(delta: float) -> void:
-	if !queueSummon: return
-	queueSummon = false
+	if !queueClick: return
+	queueClick = false
 	
 	var space_state = get_world_3d().direct_space_state
-	#var cam = $Camera3D
-	#var mousepos = get_viewport().get_mouse_position()
+	var cam = $Camera3D
+	var mousepos = get_viewport().get_mouse_position()
 
-	var origin = Raycaster.global_position
-	#var end = origin + cam.project_ray_normal(mousepos) * RAY_LENGTH
-	var end = origin + Vector3.DOWN*10
-	var query = PhysicsShapeQueryParameters3D.new()
-	query.shape
+	var origin = cam.project_ray_origin(mousepos)
+	var end = origin + cam.project_ray_normal(mousepos) * 100
+	var query = PhysicsRayQueryParameters3D.create(origin, end)
 	query.collide_with_areas = true
 
 	var result = space_state.intersect_ray(query)
-
+	
 func equip_raise():
 	summonMode = true
 func equip_splode():
