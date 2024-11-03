@@ -1,8 +1,8 @@
-[gd_scene load_steps=42 format=3 uid="uid://cg0lwr63age0v"]
+[gd_scene load_steps=40 format=3 uid="uid://cg0lwr63age0v"]
 
 [ext_resource type="PackedScene" uid="uid://cspawo2hkl2fg" path="res://prefabs/player.tscn" id="1_mnyua"]
+[ext_resource type="PackedScene" uid="uid://6jrn4phdn1eq" path="res://prefabs/human.tscn" id="3_06uuv"]
 [ext_resource type="PackedScene" uid="uid://cjv1ybdpcwsqh" path="res://prefabs/zombie.tscn" id="4_1pmvf"]
-[ext_resource type="Script" path="res://scripts/human.gd" id="8_550xb"]
 
 [sub_resource type="GDScript" id="GDScript_am0de"]
 script/source = "extends Node3D
@@ -184,16 +184,6 @@ func _process(delta: float) -> void:
 	PitchParent.rotation.x = pitch
 	
 "
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ts5r1"]
-shading_mode = 2
-diffuse_mode = 3
-specular_mode = 2
-albedo_color = Color(0.721283, 0.414295, 0.397992, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_putj3"]
-material = SubResource("StandardMaterial3D_ts5r1")
-size = Vector3(4, 7, 2)
 
 [sub_resource type="GDScript" id="GDScript_5dipt"]
 script/source = "extends Control
@@ -403,14 +393,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.3078, 0, -13.2464)
 [node name="Humans" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -67.2395, 0, -106.7)
 
-[node name="Human" type="Node3D" parent="Humans"]
-script = ExtResource("8_550xb")
-MeleeDistance = 5.0
-SightDistance = 33.0
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Humans/Human"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.41957, 0)
-mesh = SubResource("BoxMesh_putj3")
+[node name="Human" parent="Humans" instance=ExtResource("3_06uuv")]
 
 [node name="HUD Canvas" type="Control" parent="."]
 layout_mode = 3
